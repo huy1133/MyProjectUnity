@@ -10,9 +10,9 @@ public class ObstacleController : MonoBehaviour
     }
     void Update()
     {
-        if(setGame.getIsGame()) 
+        if(setGame.gameStar) 
         {
-            transform.Translate(Vector3.down * setGame.getSpeed() * Time.deltaTime);
+            transform.Translate(Vector3.down * setGame.speed * Time.deltaTime);
         }
         
     }
