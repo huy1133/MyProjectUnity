@@ -9,8 +9,11 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(skinCharacter[setGame.skin]).transform.position=new Vector3(-0.5f,-0.6f,0);
+        if (PlayerPrefs.GetInt("IsSkin") < 0 && PlayerPrefs.GetInt("IsSkin") > 12)
+            PlayerPrefs.SetInt("IsSkin", 0);
+        Instantiate(skinCharacter[PlayerPrefs.GetInt("IsSkin")]).transform.position=new Vector3(-0.5f,-0.6f,0);
         audio =gameObject.GetComponent<AudioSource>();
+        PlayerPrefs.SetInt("skin" + 0, 1);
     }
 
     // Update is called once per frame
@@ -37,11 +40,21 @@ public class GameController : MonoBehaviour
     {
         setGame.coin = PlayerPrefs.GetInt("Coin");
         setGame.bestDistance = PlayerPrefs.GetInt("Distance");
+        for(int i=0; i<12; i++)
+        {
+            setGame.unlockSkin[i] = PlayerPrefs.GetInt("skin" + i);
+        }
+        setGame.skin = PlayerPrefs.GetInt("IsSkin");
     }
     void saveGame()
     {
+        for (int i = 0; i < 12; i++)
+        {
+           PlayerPrefs.SetInt("skin" + i, setGame.unlockSkin[i]) ;
+        }
         PlayerPrefs.SetInt("Coin",setGame.coin);
         PlayerPrefs.SetInt("Distance", setGame.bestDistance);
         PlayerPrefs.Save();
+        PlayerPrefs.SetInt("IsSkin", setGame.skin);
     }
 }
