@@ -66,6 +66,14 @@ public class CharacterController : MonoBehaviour
                 transform.position += Vector3.down*3*Time.deltaTime;
             }
         }
+        if (setGame.isSound)
+        {
+            audio.mute = false;
+        }
+        else
+        {
+            audio.mute = true;
+        }
         //Debug.Log(setGame.coin+" "+setGame.bestDistance);
     }
 }

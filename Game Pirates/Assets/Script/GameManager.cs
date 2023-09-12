@@ -8,4 +8,6 @@ public static class setGame
     static public float distance;
     static public int bestDistance;
     static public int coin;
+    static public int skin=8;
+    static public bool isSound=true;
 }

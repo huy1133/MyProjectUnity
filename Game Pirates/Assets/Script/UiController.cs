@@ -14,6 +14,9 @@ public class UiController : MonoBehaviour
     [SerializeField] Text bestDistance;
     [SerializeField] Text coin;
     [SerializeField] Image overBar;
+    [SerializeField] Sprite notSound;
+    [SerializeField] Sprite sound;
+    [SerializeField] Image buttonSound;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +28,14 @@ public class UiController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!setGame.isSound)
+        {
+            buttonSound.sprite = notSound;
+        }
+        else
+        {
+            buttonSound.sprite = sound;
+        }
         if (setGame.gameOver)
         {
             overMenu.SetActive(true);
@@ -63,5 +74,16 @@ public class UiController : MonoBehaviour
         setGame.distance = 0;
         setGame.speed = 5;
         SceneManager.LoadScene(0);
+    }
+    public void soundButtonClick()
+    {
+        if (setGame.isSound)
+        {
+            setGame.isSound = false;
+        }
+        else
+        {
+            setGame.isSound=true;
+        }
     }
 }

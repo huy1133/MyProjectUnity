@@ -214,6 +214,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ee027e986208674fa4206142a72fae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skin:
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  - {fileID: 6230286844553718742, guid: 8e13eee29f0a0ab448b47fca9bb0ff23, type: 3}
+  sideSound: {fileID: 8300000, guid: 612a8b8a5aacaaf4194b17dccb65f7ce, type: 3}
+  coinSound: {fileID: 8300000, guid: 26092e11b4b5a50478c6e1b63509ed92, type: 3}
+  dieSound: {fileID: 8300000, guid: ee42415ccad929e45866f0423eae90a7, type: 3}
 --- !u!82 &3324107024507382642
 AudioSource:
   m_ObjectHideFlags: 0

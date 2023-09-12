@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] GameObject[] skinCharacter;
+    AudioSource audio;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Instantiate(skinCharacter[setGame.skin]).transform.position=new Vector3(-0.5f,-0.6f,0);
+        audio =gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -20,6 +23,14 @@ public class GameController : MonoBehaviour
         if(!setGame.gameOver&&!setGame.gameStar)
         {
             loadGame();
+        }
+        if (setGame.isSound)
+        {
+            audio.mute = false;
+        }
+        else
+        {
+            audio.mute = true;
         }
     }
     void loadGame()
