@@ -14,11 +14,18 @@ public class GameController : MonoBehaviour
         Instantiate(skinCharacter[PlayerPrefs.GetInt("IsSkin")]).transform.position=new Vector3(-0.5f,-0.6f,0);
         audio =gameObject.GetComponent<AudioSource>();
         PlayerPrefs.SetInt("skin" + 0, 1);
+        setGame.distance = 0;
+        setGame.speed = 5;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Mathf.Round(setGame.distance)>100)
+        {
+            setGame.speed += 0.0005f;
+        }
+        
         if (setGame.gameOver)
         {
             saveGame();

@@ -21,17 +21,22 @@ public class UiController : MonoBehaviour
     [SerializeField] GameObject skinMenu;
     [SerializeField] GameObject[] buttonChooseSkin;
     [SerializeField] Sprite[] imgChooseBuy;
+    [SerializeField] GameObject mainMenuPlay;
+    [SerializeField] Text textCoin;
+    [SerializeField] Text textDistance;
 
     // Start is called before the first frame update
     void Start()
     {
         mainMenu.SetActive(true);
         overMenu.SetActive(false);
+        skinMenu.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+        mainMenuPlay.SetActive(setGame.gameStar);
         if (!setGame.isSound)
         {
             buttonSound.sprite = notSound;
@@ -45,7 +50,7 @@ public class UiController : MonoBehaviour
             overMenu.SetActive(true);
             if (overBar.rectTransform.anchoredPosition.y > 0)
             {
-                float posy = overBar.rectTransform.anchoredPosition.y - 10;
+                float posy = overBar.rectTransform.anchoredPosition.y - 30;
                 overBar.rectTransform.anchoredPosition = new Vector3(0,posy,0);
             }
             
@@ -66,6 +71,8 @@ public class UiController : MonoBehaviour
         bestDistance.text = "BEST DISTANCE: " + setGame.bestDistance;
         coin.text = ""+setGame.coin;
         coin2.text = "" + setGame.coin;
+        textCoin.text = "" + setGame.tempCoin;
+        textDistance.text = "" +Mathf.Round(setGame.distance) + "m";
         for (int i=0; i < 12; i++)
         {
             buttonChooseSkin[i].GetComponent<Image>().sprite = imgChooseBuy[setGame.unlockSkin[i]];
@@ -81,9 +88,9 @@ public class UiController : MonoBehaviour
     {
         setGame.gameOver = false;
         setGame.gameStar = false;
+        SceneManager.LoadScene(0);
         setGame.distance = 0;
         setGame.speed = 5;
-        SceneManager.LoadScene(0);
     }
     public void soundButtonClick()
     {

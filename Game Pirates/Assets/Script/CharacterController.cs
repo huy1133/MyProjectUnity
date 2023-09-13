@@ -2,16 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
     Animator animator;
-    int coin;
     AudioSource audio;
     [SerializeField] AudioClip sideSound;
     [SerializeField] AudioClip coinSound;
     [SerializeField] AudioClip dieSound;
+   
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Obstacle")
@@ -19,7 +19,7 @@ public class CharacterController : MonoBehaviour
             audio.PlayOneShot(dieSound);
             setGame.gameStar = false;
             setGame.gameOver = true;
-            setGame.coin += coin;
+            setGame.coin += setGame.tempCoin;
             if (setGame.distance > setGame.bestDistance)
             {
                 setGame.bestDistance = (int)Math.Round(setGame.distance);
@@ -29,14 +29,15 @@ public class CharacterController : MonoBehaviour
         {
             audio.PlayOneShot(coinSound);
             Destroy(collision.gameObject);
-            coin++;
+            setGame.tempCoin++;
         }
     }
     void Start()
     {
         animator = GetComponent<Animator>();
-        coin = 0;
+        setGame.tempCoin = 0;
         audio = GetComponent<AudioSource>();
+        
     }
 
     // Update is called once per frame
@@ -44,6 +45,7 @@ public class CharacterController : MonoBehaviour
     {
         if (setGame.gameStar)
         {
+            
             setGame.distance+=setGame.speed*Time.deltaTime;
             if (transform.position.y < 0)
             {
@@ -59,6 +61,8 @@ public class CharacterController : MonoBehaviour
                 transform.localScale = new Vector3(sca.x * -1, sca.y, sca.z);
             }
         }
+        
+       
         if (!setGame.gameStar && setGame.gameOver)
         {
             if (transform.position.y > -10)
@@ -74,6 +78,8 @@ public class CharacterController : MonoBehaviour
         {
             audio.mute = true;
         }
+        //textCoin.text = "" + coin;
+        //textDistance.text = "" + setGame.distance+"m";
         //Debug.Log(setGame.coin+" "+setGame.bestDistance);
     }
 }
