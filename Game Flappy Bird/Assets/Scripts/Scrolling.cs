@@ -6,19 +6,17 @@ public class Scrolling : MonoBehaviour
 {
     MeshRenderer meshRenderer;
     float scroll;
-    public bool isGame;
     float widthCamera;
     void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         scroll = 0;
-        isGame = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isGame) 
+        if (SetGame.gameStar) 
         {
             widthCamera = 2f * Camera.main.orthographicSize * Camera.main.aspect;
             transform.localScale = new Vector3(widthCamera, 1, 1);
