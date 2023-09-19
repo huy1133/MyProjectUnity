@@ -60,6 +60,8 @@ public class BirdController : MonoBehaviour
         {
             SetGame.gameStar = false;
             SetGame.gameOver = true;
+           
+            GameObject.Find("GameController").GetComponent<UIController>().showMainMenu();
         }
         if(collision.gameObject.tag == "score")
         {

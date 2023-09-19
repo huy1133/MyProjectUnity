@@ -20,17 +20,21 @@ public class GameController : MonoBehaviour
         SetGame.gameOver = false;
         createFirstEnemy(5,10);
         score = 0;
-        if (PlayerPrefs.GetInt("Skin1") == 0) PlayerPrefs.SetInt("Skin1", 1);
-        GameObject bird = Instantiate(birdType[PlayerPrefs.GetInt("NowSkin")]);
+        GameObject bird = Instantiate(birdType[Random.Range(0,birdType.Length)]);
         SetGame.speed = 0.025f;
+        SetGame.score = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         showNumber(score.ToString().Length);
-
-        Debug.Log(SetGame.speed);
+        SetGame.score = score;
+        if (SetGame.score > PlayerPrefs.GetInt("BestScore"))
+        {
+            PlayerPrefs.SetInt("BestScore", SetGame.score);
+            PlayerPrefs.Save();
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -72,7 +76,6 @@ public class GameController : MonoBehaviour
         {
             SetGame.speed += 0.005f;
         }
-        SetGame.score = score;
     }
    
 }

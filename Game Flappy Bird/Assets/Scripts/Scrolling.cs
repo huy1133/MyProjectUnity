@@ -18,11 +18,10 @@ public class Scrolling : MonoBehaviour
     {
         if (SetGame.gameStar) 
         {
-            widthCamera = 2f * Camera.main.orthographicSize * Camera.main.aspect;
-            transform.localScale = new Vector3(widthCamera, 1, 1);
             scroll -= Time.deltaTime;
             meshRenderer.material.mainTextureOffset = new Vector2(scroll, 0);
         }
-        
+        widthCamera = 2f * Camera.main.orthographicSize * Camera.main.aspect;
+        transform.localScale = new Vector3(widthCamera, 1, 1);
     }
 }
