@@ -6,6 +6,10 @@ public class BirdController : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] float force;
+    [SerializeField] AudioClip swing;
+    [SerializeField] AudioClip die;
+    [SerializeField] AudioClip plusScore;
+    AudioSource audio;
     Rigidbody2D rigidbody;
     Vector3 rotate = new Vector3(0, 0, 35);
 
@@ -14,7 +18,7 @@ public class BirdController : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody2D>();
         rigidbody.bodyType = RigidbodyType2D.Kinematic;
-        
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -50,6 +54,7 @@ public class BirdController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)&&SetGame.gameStar)
         {
+            audio.PlayOneShot(swing);
             rigidbody.velocity = Vector3.zero;
             rigidbody.AddForce(Vector2.up * force, ForceMode2D.Force);
         }
@@ -58,6 +63,7 @@ public class BirdController : MonoBehaviour
     {
         if (collision.gameObject.tag == "enemy")
         {
+            if(SetGame.gameStar)audio.PlayOneShot(die);
             SetGame.gameStar = false;
             SetGame.gameOver = true;
            
@@ -65,6 +71,7 @@ public class BirdController : MonoBehaviour
         }
         if(collision.gameObject.tag == "score")
         {
+            audio.PlayOneShot(plusScore);
             GameObject.Find("GameController").GetComponent<GameController>().plusScore();
             
         }
