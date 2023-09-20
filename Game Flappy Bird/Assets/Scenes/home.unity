@@ -497,7 +497,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &737054430
 RectTransform:
   m_ObjectHideFlags: 0
@@ -754,7 +754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1291519288
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1019,10 +1019,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2e441481109b3e4bad007f75743aa5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenu: {fileID: 480368322}
   logo: {fileID: 1781002879}
   score1: {fileID: 737054429}
   score2: {fileID: 1501138469}
+  restar: {fileID: 1291519287}
   score: {fileID: 737054431}
   bestScore: {fileID: 1501138471}
 --- !u!1 &1446130145
@@ -1134,7 +1134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1501138470
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1443,7 +1443,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1781002880
 RectTransform:
   m_ObjectHideFlags: 0
