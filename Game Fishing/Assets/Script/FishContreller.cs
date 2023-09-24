@@ -37,7 +37,7 @@ public class FishContreller : MonoBehaviour
         born.y = UnityEngine.Random.Range(type.minBorn, type.maxBorn);
         transform.position = born;
         float delay = UnityEngine.Random.Range(0, 5);
-        float speedMove = UnityEngine.Random.Range(type.speed/2,type.speed);
+        float speedMove = UnityEngine.Random.Range(type.speed-3>1?type.speed-3:1,type.speed);
         fishTween = transform.DOMoveX(2.6f,type.speed , false)
         .SetDelay(delay)
         .SetLoops(-1, LoopType.Yoyo)

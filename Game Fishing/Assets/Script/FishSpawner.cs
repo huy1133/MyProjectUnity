@@ -11,7 +11,7 @@ public class FishSpawner : MonoBehaviour
     private void Awake()
     {
         // Đặt dung lượng tweens theo cách thủ công
-        DOTween.SetTweensCapacity(300, 50);
+        DOTween.SetTweensCapacity(750, 50);
     }
     private void Start()
     {
