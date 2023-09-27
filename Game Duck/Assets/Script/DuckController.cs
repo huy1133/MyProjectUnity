@@ -32,7 +32,7 @@ public class DuckController : MonoBehaviour
     }
     private void Start()
     {
-        speed = 1.5f;
+        speed = 1f;
         blood = 1;
         damage = 1;
 

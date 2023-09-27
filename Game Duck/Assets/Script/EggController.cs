@@ -25,7 +25,7 @@ public class EggController : MonoBehaviour
     private void Update()
     {
         float Distance = (character.transform.position - transform.position).magnitude;
-        if(Distance <=1.5f)
+        if(Distance <=1f)
         {
             isSucked=true;
         }

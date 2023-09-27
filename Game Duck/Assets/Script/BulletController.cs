@@ -10,7 +10,7 @@ public class BulletController : MonoBehaviour
     }
     void Update()
     {
-        transform.Translate(Vector2.right * 8 * Time.deltaTime);
+        transform.Translate(Vector2.right * PlayerPrefs.GetInt("SpeedShoot") * Time.deltaTime);
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
