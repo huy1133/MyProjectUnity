@@ -16,6 +16,8 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] Text costDamage;
     [SerializeField] Text costSpeedShoot;
     [SerializeField] Text costBlood;
+    [SerializeField] GameObject loadingGame;
+    [SerializeField] GameObject loadingIcon;
     int[] costDamegeUpdate;
     int[] costSpeedShootUpdate;
     int[] costBloodUpdate;
@@ -144,6 +146,17 @@ public class MainMenuController : MonoBehaviour
     }
     public void buttonPlay()
     {
-        SceneManager.LoadScene(1);
+        
+        StartCoroutine(LoadGameScene());
+    }
+    IEnumerator LoadGameScene()
+    {
+        loadingGame.SetActive(true);
+        AsyncOperation async = SceneManager.LoadSceneAsync(1);
+        while (!async.isDone)
+        {
+            loadingIcon.GetComponent<RectTransform>().Rotate(new Vector3(0,0,90)*Time.deltaTime);
+            yield return null;
+        }
     }
 }
