@@ -75,14 +75,11 @@ public class DuckController : MonoBehaviour
     {
         if(blood <= 0)
         {
-            GameObject.Find("GameController").GetComponent<GameController>().playSoundDuck(1);
+           
             GameObject tempegg = Instantiate(egg,transform.position,Quaternion.identity);
             Destroy(gameObject);
         }
-        else
-        {
-            GameObject.Find("GameController").GetComponent<GameController>().playSoundDuck(0);
-        }
+       
         
     }
     void chanceColor()

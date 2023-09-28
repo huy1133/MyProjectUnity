@@ -19,6 +19,7 @@ public class MainMenuController : MonoBehaviour
     int[] costDamegeUpdate;
     int[] costSpeedShootUpdate;
     int[] costBloodUpdate;
+    
     private void Start()
     {
         costBloodUpdate = new int[] { 50, 100, 200, 300, 400, 700 };
@@ -29,7 +30,7 @@ public class MainMenuController : MonoBehaviour
         {
             loadingGameFirt();
         }
-        
+       
     }
     private void Update()
     {
@@ -37,6 +38,7 @@ public class MainMenuController : MonoBehaviour
         showDamage();
         showSpeedShoot();
         showBlood();
+       
     }
     void loadingGameFirt()
     {

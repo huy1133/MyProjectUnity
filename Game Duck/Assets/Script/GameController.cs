@@ -11,8 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] Text eggTextGameOver;
     [SerializeField] Slider BloddSlider;
     [SerializeField] GameObject overGamePanel;
-    [SerializeField] AudioClip[] duckSound;
-    AudioSource audioSource;
+   
     public int eggate;
     float blood;
 
@@ -20,7 +19,6 @@ public class GameController : MonoBehaviour
     {
         eggate = 0;
         blood = PlayerPrefs.GetInt("Blood");
-        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -54,8 +52,5 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
     }
-    public void playSoundDuck(int i)
-    {
-        audioSource.PlayOneShot(duckSound[i]);
-    }
+   
 }
