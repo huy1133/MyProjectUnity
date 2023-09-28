@@ -23,7 +23,6 @@ public class GunController : MonoBehaviour
     {
         gameObjectTarget = findTarget();
         forWardGun();
-        shoot();
     }
     void shoot()
     {
@@ -80,6 +79,7 @@ public class GunController : MonoBehaviour
             Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, angle));
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 1);
             scaleGun();
+            shoot();
         }
         
         

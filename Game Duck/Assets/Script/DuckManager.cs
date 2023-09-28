@@ -44,7 +44,7 @@ public class DuckManager : MonoBehaviour
     bool canCreateDuck()
     {
         GameObject[] temp = GameObject.FindGameObjectsWithTag("enemy");
-        if (temp.Length <= 15)
+        if (temp.Length <= 10)
             return true;
         return false;
     }

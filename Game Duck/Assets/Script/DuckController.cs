@@ -75,8 +75,11 @@ public class DuckController : MonoBehaviour
     {
         if(blood <= 0)
         {
-           
-            GameObject tempegg = Instantiate(egg,transform.position,Quaternion.identity);
+            int SLEgg = UnityEngine.Random.Range(0, 4);
+            for (int i=0; i<SLEgg; i++)
+            {
+                GameObject tempegg = Instantiate(egg, transform.position, Quaternion.identity);
+            }
             Destroy(gameObject);
         }
        
