@@ -17,12 +17,12 @@ public class GunController : MonoBehaviour
         timeShoot = 5;
         timeCount = 0;
         canShoot = true;
+        gameObjectTarget = null; 
     }
     private void Update()
     {
         gameObjectTarget = findTarget();
         forWardGun();
-        scaleGun();
         shoot();
     }
     void shoot()
@@ -72,29 +72,35 @@ public class GunController : MonoBehaviour
     }
     void forWardGun()
     {
+        if (gameObjectTarget!=null) 
+        {
+            Vector3 targetDirection = gameObjectTarget.transform.position - transform.position;
+            //tinh goc tu gun den enemy
+            float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
+            Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 1);
+            scaleGun();
+        }
         
-        Vector3 targetDirection = gameObjectTarget.transform.position - transform.position;
-        //tinh goc tu gun den enemy
-        float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
-        Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 1);
         
     }
     GameObject findTarget()
     {
-        float distance = 5;
-        GameObject targetNearest=gameObject;
-        GameObject[] tempTarget = GameObject.FindGameObjectsWithTag("enemy");
-        foreach (GameObject target in tempTarget)
+        GameObject targetNearest = gameObjectTarget;
+        float distance = 20;
+        if (targetNearest == null)
         {
-            float distanceTemp = Vector3.Distance(gameObject.transform.position, target.transform.position);
-            if (distance > distanceTemp && distanceTemp<=4)
+            GameObject[] tempTarget = GameObject.FindGameObjectsWithTag("enemy");
+            foreach (GameObject target in tempTarget)
             {
-                distance = distanceTemp;
-                targetNearest = target;
-                
+                float distanceTemp = Vector3.Distance(gameObject.transform.position, target.transform.position);
+                if (distance > distanceTemp)
+                {
+                    distance = distanceTemp;
+                    targetNearest = target;
+                }
+
             }
-            
         }
         return targetNearest;
     }

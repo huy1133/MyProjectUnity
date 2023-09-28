@@ -11,33 +11,22 @@ public class GameController : MonoBehaviour
     [SerializeField] Text eggTextGameOver;
     [SerializeField] Slider BloddSlider;
     [SerializeField] GameObject overGamePanel;
+    [SerializeField] AudioClip[] duckSound;
+    AudioSource audioSource;
     public int eggate;
     float blood;
 
     void Start()
     {
-        if (PlayerPrefs.GetInt("firt") == 0)
-        {
-            loadingGameFirt();
-            PlayerPrefs.SetInt("firt", 1);
-            PlayerPrefs.Save();
-        }
         eggate = 0;
         blood = PlayerPrefs.GetInt("Blood");
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
         UI();
-    }
-    void loadingGameFirt()
-    {
-        Debug.Log("yea");
-        PlayerPrefs.SetInt("Damage", 1);
-        PlayerPrefs.SetInt("SpeedShoot", 5);
-        PlayerPrefs.SetInt("Blood", 5);
-        PlayerPrefs.Save();
     }
     public void damaged(int D)
     {
@@ -60,6 +49,13 @@ public class GameController : MonoBehaviour
     }
     public void clamButton()
     {
+        PlayerPrefs.SetInt("Egg", PlayerPrefs.GetInt("Egg") + eggate);
+        PlayerPrefs.Save();
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
+    }
+    public void playSoundDuck(int i)
+    {
+        audioSource.PlayOneShot(duckSound[i]);
     }
 }

@@ -1,12 +1,13 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class DuckController : MonoBehaviour
 {
-    GameObject character;
+    [SerializeField] GameObject character;
     float speed;
     int blood;
     int damage;
@@ -14,6 +15,7 @@ public class DuckController : MonoBehaviour
     Vector3 target;
     float currentTime;
     float timeDamaged;
+    SpriteRenderer spriteRenderer;
 
     // Start is called before the first frame update
 
@@ -23,7 +25,6 @@ public class DuckController : MonoBehaviour
         {
             if (timeDamaged <= currentTime)
             {
-
                 GameObject.Find("GameController").GetComponent<GameController>().damaged(damage);
                 currentTime = 0;
             }
@@ -40,10 +41,17 @@ public class DuckController : MonoBehaviour
         currentTime = 0;
 
         character = GameObject.Find("Player");
+
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+
+          
     }
     private void Update()
     {
-        currentTime += Time.deltaTime;
+        if(currentTime <= timeDamaged)
+        {
+            currentTime += Time.deltaTime;
+        }
         Move();
     }
     // Update is called once per frame
@@ -53,20 +61,33 @@ public class DuckController : MonoBehaviour
         target = character.transform.position;
         //transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime);
         transform.position = Vector2.MoveTowards(transform.position, target, speed*Time.deltaTime);
+        bool flip =target.x>transform.position.x?false:true;
+        spriteRenderer.flipX = flip;
     }
     public void damaged()
     {
-        blood-=PlayerPrefs.GetInt("Damage");
+        blood -= PlayerPrefs.GetInt("Damage");
+        spriteRenderer.color = Color.red;
+        Invoke("chanceColor", 0.1f);
         die();
     }
     public void die()
     {
         if(blood <= 0)
         {
+            GameObject.Find("GameController").GetComponent<GameController>().playSoundDuck(1);
             GameObject tempegg = Instantiate(egg,transform.position,Quaternion.identity);
             Destroy(gameObject);
         }
+        else
+        {
+            GameObject.Find("GameController").GetComponent<GameController>().playSoundDuck(0);
+        }
         
+    }
+    void chanceColor()
+    {
+        spriteRenderer.color = Color.white;
     }
     public void lever(int lv)
     {

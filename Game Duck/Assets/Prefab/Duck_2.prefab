@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5609847976865560343}
   - component: {fileID: 5516063299536890356}
   - component: {fileID: 7730906149044378399}
-  - component: {fileID: 2195801466643398526}
   - component: {fileID: 6686417555121032438}
   m_Layer: 0
   m_Name: Duck_2
@@ -76,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 81271c82832089c4f88dca0d5f8d2acf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -121,34 +120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca585b537601504a9c8bc2d4d5d7a1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 2703270598609898581, guid: 6b54645991eed8646817a414d6af812c, type: 3}
   egg: {fileID: 2739193797892244699, guid: 8e9b00dc806caf14290393b5c2f88ebb, type: 3}
---- !u!50 &2195801466643398526
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8441270194129624235}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!60 &6686417555121032438
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -14,7 +14,7 @@ public class characterController : MonoBehaviour
     bool canSetFirstAgain;
     Vector3 firstPoint;
     Vector3 nowPoint;
-    bool canMove;
+    
    
     // Start is called before the first frame update
     void Start()
@@ -32,7 +32,6 @@ public class characterController : MonoBehaviour
     {
         move();
         Vector3 pos = transform.position;
-        canMove = pos.x>=-7&&pos.x<=7&&pos.y>=-7&&pos.y<=7?true:false;
     }
     void move()
     {

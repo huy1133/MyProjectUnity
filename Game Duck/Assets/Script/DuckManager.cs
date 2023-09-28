@@ -6,35 +6,47 @@ public class DuckManager : MonoBehaviour
 {
     [SerializeField] GameObject[] ducks;
     int leverDuck;
+    int exDuck;
     float currentTime;
     int Difficulty;
-    bool canCreateDuck;
     private void Start()
     {
-        currentTime = 11;
+        currentTime = 21;
         Difficulty = 5;
         leverDuck = 1;
-        canCreateDuck = true;
+        exDuck = 0;
     }
     private void Update()
     {
-        if(currentTime >= 10 && canCreateDuck ) 
+        if(currentTime >= 15) 
         {
-            Debug.Log("tao vi");
-            createDuck();
-            Difficulty += 5;
-            leverDuck++;
-            currentTime=0;
+            if (exDuck == 2)
+            {
+                Difficulty += 1;
+                leverDuck++;
+                exDuck = 0;
+            }
+            if (canCreateDuck())
+            {
+                createDuck();
+                exDuck++;
+                currentTime = 0;
+
+            }
         }
-        currentTime += Time.deltaTime;
-        check();
+        else
+        {
+            currentTime += Time.deltaTime;
+        }
+        
+       
     }
-    void check()
+    bool canCreateDuck()
     {
         GameObject[] temp = GameObject.FindGameObjectsWithTag("enemy");
-        canCreateDuck = false;
         if (temp.Length <= 15)
-            canCreateDuck = true;
+            return true;
+        return false;
     }
     void createDuck()
     {
