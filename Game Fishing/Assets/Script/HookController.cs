@@ -7,7 +7,7 @@ public class HookController : MonoBehaviour
 {
     Camera mainCamera;
     Vector3 oldHookTransform;
-    bool canMove;
+    bool isMove;
     float maxX, minX;
     Tween tweenCamera;
     CircleCollider2D circleCollider;
@@ -18,12 +18,12 @@ public class HookController : MonoBehaviour
         minX = mainCamera.ViewportToWorldPoint(Vector3.zero).x;
         maxX = mainCamera.ViewportToWorldPoint(Vector3.right).x;
         oldHookTransform = transform.position;
-        canMove=false;
+        isMove=false;
         circleCollider = GetComponent<CircleCollider2D>();
     }
     private void Update()
     {
-        if(canMove && Input.GetMouseButton(0))
+        if(isMove && Input.GetMouseButton(0))
         {
             Vector3 vector = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Vector3 position = transform.position;
@@ -56,7 +56,7 @@ public class HookController : MonoBehaviour
             });
         });
         ScreensManager.instance.ChangeScreen(Screens.InGame);
-        canMove = true;
+        isMove = true;
     }
     void stopFishing()
     {
