@@ -1,32 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GridBrushBase;
 
-enum Turn
-{
-    turnLeft,
-    turnRight,
-    straight
-}
+
 public class CarController : MonoBehaviour
 {
-    [SerializeField] float speed;
-    Turn turn;
-    // Start is called before the first frame update
-    void Start()
+
+    float moveSpeed = 50;
+    float drag = 0.98f;
+    float maxSpeed = 15;
+    float steerAngle = 20;
+
+    Vector3 moveForce;
+    private void Update()
     {
-        turn = Turn.straight;
-    }
+        
+        //moving
+        moveForce += transform.forward* Input.GetAxis("Vertical") * moveSpeed*Time.deltaTime;
+        transform.position += moveForce*Time.deltaTime;
+        //Steering
+        transform.Rotate(Vector3.up*Input.GetAxis("Horizontal") * moveForce.magnitude * steerAngle * Time.deltaTime);
+        //drag and speed limit
+        moveForce *= drag;
+        moveForce = Vector3.ClampMagnitude(moveForce, maxSpeed);
 
-    // Update is called once per frame
-    void Update()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
+        Debug.DrawRay(transform.position, transform.forward.normalized*3, Color.yellow);
+        Debug.DrawRay(transform.position, moveForce.normalized * 3, Color.red);
 
-        transform.Rotate(Vector3.up * horizontal * 100 * Time.deltaTime);
-
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        Debug.Log(transform.forward);
+        moveForce = Vector3.Lerp(moveForce.normalized, transform.forward.normalized, 1)*moveForce.magnitude;
     }
 }
