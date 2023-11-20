@@ -16,6 +16,9 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position =Vector3.Slerp(transform.position,distance+car.position,speedMove*Time.deltaTime);
+        Vector3 vectorto = distance+car.position;
+        vectorto.y=distance.y;
+        transform.position =Vector3.Slerp(transform.position,vectorto,speedMove);
+       
     }
 }

@@ -65,6 +65,7 @@ public class PoliceAuto : MonoBehaviour
         {
             turn = Turn.none;
         }
+       
         currentAngle = angle;
     }
     void controlCar()
