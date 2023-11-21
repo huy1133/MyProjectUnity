@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6539308616416268421}
   m_Layer: 0
   m_Name: Police Sedan
-  m_TagString: Untagged
+  m_TagString: Police
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37,6 +37,7 @@ Transform:
   - {fileID: 4938587374112006265}
   - {fileID: 7175119727324534683}
   - {fileID: 4600228952889232023}
+  - {fileID: 4297879178844491039}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &5256657135940413710
@@ -107,7 +108,8 @@ MonoBehaviour:
   particles:
   - {fileID: 6755126948399040792}
   - {fileID: 2017155915772870308}
-  playerPointTarget: {fileID: 0}
+  explosion: {fileID: 1366357958293469900}
+  playerPointTarget: {fileID: 7436674899604144076, guid: 22d478d6a2a45834cac35a72e31a4e08, type: 3}
 --- !u!1 &625381450970909516
 GameObject:
   m_ObjectHideFlags: 0
@@ -10097,4 +10099,71 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a9c67d2c31805514d9b09861c2c4b18c, type: 3}
   m_PrefabInstance: {fileID: 4061669214154616188}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7054572323822565627
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 962627021985469022}
+    m_Modifications:
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129785816035097932, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_Name
+      value: Explosion
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+--- !u!198 &1366357958293469900 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8291311031714759223, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+  m_PrefabInstance: {fileID: 7054572323822565627}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4297879178844491039 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+  m_PrefabInstance: {fileID: 7054572323822565627}
   m_PrefabAsset: {fileID: 0}

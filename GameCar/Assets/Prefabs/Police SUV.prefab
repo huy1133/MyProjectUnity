@@ -4842,7 +4842,7 @@ GameObject:
   - component: {fileID: 522167134191363298}
   m_Layer: 0
   m_Name: Police SUV
-  m_TagString: Untagged
+  m_TagString: Police
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4865,6 +4865,7 @@ Transform:
   - {fileID: 3367459910163617458}
   - {fileID: 6904676359685641514}
   - {fileID: 5953011172939259125}
+  - {fileID: 551442493133104576}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &211223740185480838
@@ -4935,7 +4936,8 @@ MonoBehaviour:
   particles:
   - {fileID: 1993446226031987806}
   - {fileID: 2412112570696921248}
-  playerPointTarget: {fileID: 0}
+  explosion: {fileID: 3383464477034795539}
+  playerPointTarget: {fileID: 7436674899604144076, guid: 22d478d6a2a45834cac35a72e31a4e08, type: 3}
 --- !u!1 &5921594250884846876
 GameObject:
   m_ObjectHideFlags: 0
@@ -10097,4 +10099,71 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 873e75c12622cf340b011f86289084cb, type: 3}
   m_PrefabInstance: {fileID: 6131617230527707934}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6765774947239137316
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1338313763144483004}
+    m_Modifications:
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129785816035097932, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: m_Name
+      value: Explosion
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+--- !u!4 &551442493133104576 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6504256078869181924, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+  m_PrefabInstance: {fileID: 6765774947239137316}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3383464477034795539 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8291311031714759223, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+  m_PrefabInstance: {fileID: 6765774947239137316}
   m_PrefabAsset: {fileID: 0}

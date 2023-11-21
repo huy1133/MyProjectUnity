@@ -11,11 +11,7 @@ public class ShowMap : MonoBehaviour
     [SerializeField] Image[] star;
     [SerializeField] Sprite[] spriteStar;
     string[] nameMaps = { "Desert" , "Midnight City" };
-    void Start()
-    {
-        PlayerPrefs.SetInt("LeverMap0", 0);
-        PlayerPrefs.Save();
-    }
+    
 
     // Update is called once per frame
     void Update()
@@ -26,7 +22,7 @@ public class ShowMap : MonoBehaviour
     void showInforMap()
     {
         nameMap.text = nameMaps[PlayerPrefs.GetInt("CurrentMap")];
-        string leverstr = "LeverMap" + PlayerPrefs.GetInt("CurrentMap").ToString();
+        string leverstr = "LeverMap" + PlayerPrefs.GetInt("CurrentMap");
         for(int i = 0; i < star.Length; i++) 
         { 
             if(i<PlayerPrefs.GetInt(leverstr))
@@ -38,6 +34,7 @@ public class ShowMap : MonoBehaviour
                 star[i].sprite = spriteStar[0];
             }
         }
+       
     }
     void showMap()
     {

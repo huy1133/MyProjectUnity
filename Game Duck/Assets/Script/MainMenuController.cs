@@ -158,5 +158,9 @@ public class MainMenuController : MonoBehaviour
             loadingIcon.GetComponent<RectTransform>().Rotate(new Vector3(0,0,90)*Time.deltaTime);
             yield return null;
         }
+        if (async.isDone)
+        {
+            loadingGame.SetActive(false);
+        }
     }
 }

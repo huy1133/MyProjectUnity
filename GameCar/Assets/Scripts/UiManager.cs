@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UiManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] GameObject back;
     [SerializeField] GameObject play;
     [SerializeField] GameObject islock;
+    [SerializeField] GameObject loadingGamePanner;
+    [SerializeField] GameObject iconLoading;
 
     enum Page
     {
@@ -23,7 +26,8 @@ public class UiManager : MonoBehaviour
         page = Page.ChangeCar;
         PlayerPrefs.SetInt("UnlockedCar0", 1);
         PlayerPrefs.SetInt("UnlockedMap0", 1);
-        PlayerPrefs.Save(); 
+        PlayerPrefs.Save();
+        
     }
 
     // Update is called once per frame
@@ -77,6 +81,7 @@ public class UiManager : MonoBehaviour
                 play.SetActive(false);
             }
         }
+        
     }
     public void nextPageButton()
     {
@@ -85,5 +90,19 @@ public class UiManager : MonoBehaviour
     public void backPageButton()
     {
         page = Page.ChangeCar;
+    }
+    public void PlayButton()
+    {
+        StartCoroutine(LoadingGame());
+    }
+    IEnumerator LoadingGame()
+    {
+        loadingGamePanner.SetActive(true);
+        AsyncOperation async = SceneManager.LoadSceneAsync(1);
+        while (async.isDone)
+        {
+            iconLoading.GetComponent<RectTransform>().Rotate(new Vector3(0,0,90)*Time.deltaTime);
+            yield return null;
+        }
     }
 }

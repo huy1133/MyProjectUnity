@@ -13,26 +13,51 @@ public class CarController1 : MonoBehaviour
     [SerializeField] float speed, steerAngle;
     [SerializeField] TrailRenderer[] trail;
     [SerializeField] ParticleSystem[] particles;
-
+    [SerializeField] ParticleSystem explosion;
+    [SerializeField] GameObject[] cars;
+    [SerializeField] GameObject[] maps;
+        
     Rigidbody rb;
-
+    public bool canMove;
     Vector3 moveForce;
     Turn turn;
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag!="Ground")
+        {
+            canMove = false;
+            explosion.Play();
+        }
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         turn = Turn.none;
-       
+        canMove = true;
         trail[0].emitting = false;
         trail[1].emitting = false;
         particles[0].gameObject.SetActive(false);
         particles[1].gameObject.SetActive(false);
+        explosion.Stop();
+        foreach(GameObject temp in cars)
+        {
+            temp.SetActive(false);
+        }
+        cars[PlayerPrefs.GetInt("CurrentCar")].SetActive(true);
+        foreach (GameObject temp in maps)
+        {
+            temp.SetActive(false);
+        }
+        maps[PlayerPrefs.GetInt("CurrentMap")].SetActive(true);
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
-        controlCar();
+        if(canMove)
+        {
+            controlCar();
+        }
     }
     void Update()
     {
