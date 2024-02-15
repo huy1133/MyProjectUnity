@@ -32604,7 +32604,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c88cf49768313945a0219dae5427d73, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 01afef6bf972c774aabfc06c0c12b17d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -40041,7 +40041,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c88cf49768313945a0219dae5427d73, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 01afef6bf972c774aabfc06c0c12b17d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -51943,7 +51943,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c88cf49768313945a0219dae5427d73, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 01afef6bf972c774aabfc06c0c12b17d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -66242,7 +66242,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c88cf49768313945a0219dae5427d73, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 01afef6bf972c774aabfc06c0c12b17d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -67276,7 +67276,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ee992001ff75f13458d68fc183575e12, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 01afef6bf972c774aabfc06c0c12b17d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -86236,8 +86236,8 @@ MonoBehaviour:
   - {fileID: 1227593032}
   - {fileID: 1502011747}
   imgStar:
-  - {fileID: 21300000, guid: 0c88cf49768313945a0219dae5427d73, type: 3}
-  - {fileID: 21300000, guid: ee992001ff75f13458d68fc183575e12, type: 3}
+  - {fileID: 21300000, guid: 01afef6bf972c774aabfc06c0c12b17d, type: 3}
+  - {fileID: 21300000, guid: b1528d3423d45794aaa698145133d9a9, type: 3}
   slider: {fileID: 1573959462}
   overGamePaner: {fileID: 733752617}
   textTimeToReStart: {fileID: 766720308}

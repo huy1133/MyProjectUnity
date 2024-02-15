@@ -62,6 +62,7 @@ public class CarController1 : MonoBehaviour
     void Update()
     {
         input();
+
     }
     void input()
     {
