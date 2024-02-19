@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -101,7 +102,7 @@ public class GameController : MonoBehaviour
                 }
                 correct = UnityEngine.Random.Range(0, 4);
                 t[correct] = currentAnswer;
-                textQuez.text = currentVocabulary[currentAnswer].getWord()+" "+ currentVocabulary[currentAnswer].getPronunciation()+" "+ currentVocabulary[currentAnswer].getWordType();
+                textQuez.text = currentVocabulary[currentAnswer].getWord()+" "+ currentVocabulary[currentAnswer].getPronunciation() + " "+ currentVocabulary[currentAnswer].getWordType();
                 for (int i = 0; i < 4; i++)
                 {
                     textOpition[i].text = "" + currentVocabulary[t[i]].getVietnameseTranslation();
