@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static Unity.Burst.Intrinsics.X86;
 
 public class GameController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class GameController : MonoBehaviour
     [SerializeField] Text[] textOpition;
     [SerializeField] Slider blood;
     [SerializeField] GameObject[] levels;
+    [SerializeField] GameObject[] questions;
     List<List<EnglishWord>> vocabularys =  new List<List<EnglishWord>>();
     List<EnglishWord> currentVocabulary = new List<EnglishWord>();
     bool isStar;
@@ -23,6 +25,7 @@ public class GameController : MonoBehaviour
     int valuesBloos;
     bool canChoose;
     int currentLevel;
+    int timeShowAnswer;
     private void Start()
     {
         isStar = false;
@@ -87,21 +90,28 @@ public class GameController : MonoBehaviour
                 timeCountdown = 15;
                 isCountDown=true;
                 int[] t = new int[4];
+                correct = -1;
                 for (int i = 0; i < 4; i++)
                 {
                     t[i] = UnityEngine.Random.Range(0, currentVocabulary.Count);
+                    if (currentVocabulary[t[i]].getVietnameseTranslation() == currentVocabulary[currentAnswer].getVietnameseTranslation())
+                    {
+                        correct = i;
+                    }
                     for(int j = 0; j<i; j++)
                     {
-                        if (t[i] == t[j])
+                        if (currentVocabulary[t[i]].getVietnameseTranslation() == currentVocabulary[t[j]].getVietnameseTranslation())
                         {
                             i -= 1;
                             break;
                         }
                     }
-                    i = t[i] == currentAnswer ? i - 1 : i;
                 }
-                correct = UnityEngine.Random.Range(0, 4);
-                t[correct] = currentAnswer;
+                if (correct == -1)
+                {
+                    correct = UnityEngine.Random.Range(0, 4);
+                    t[correct] = currentAnswer;
+                }
                 textQuez.text = currentVocabulary[currentAnswer].getWord()+" "+ currentVocabulary[currentAnswer].getPronunciation() + " "+ currentVocabulary[currentAnswer].getWordType();
                 for (int i = 0; i < 4; i++)
                 {
@@ -121,7 +131,6 @@ public class GameController : MonoBehaviour
     void waitNext()
     {
         isNext = true;
-        
     }
     void waitCharacterAttact()
     {
@@ -170,7 +179,17 @@ public class GameController : MonoBehaviour
             }
             canChoose = false;
         }
-        
+        timeShowAnswer = 9;
+        showCorrectAnswer();
+    }
+    void showCorrectAnswer()
+    {
+        if (timeShowAnswer>0)
+        {
+            bool sae = timeShowAnswer--%2==0 ? false : true;
+            questions[correct].gameObject.SetActive(sae);
+            Invoke("showCorrectAnswer", 0.1f);
+        }
     }
     public void Option(int option)
     {
