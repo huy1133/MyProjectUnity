@@ -13,8 +13,10 @@ public class GameController : MonoBehaviour
     [SerializeField] Slider blood;
     [SerializeField] GameObject[] levels;
     [SerializeField] GameObject[] questions;
+    [SerializeField] GameObject[] heart;
     List<List<EnglishWord>> vocabularys =  new List<List<EnglishWord>>();
     List<EnglishWord> currentVocabulary = new List<EnglishWord>();
+
     bool isStar;
     bool isEnd;
     bool isNext;
@@ -26,15 +28,19 @@ public class GameController : MonoBehaviour
     bool canChoose;
     int currentLevel;
     int timeShowAnswer;
+    private void Awake()
+    {
+        createVocabulary();
+    }
     private void Start()
     {
+        
         isStar = false;
         isEnd = false;
         isNext = true;
         isCountDown = false;
         canChoose = true;
         currentAnswer = 0;
-        createVocabulary();
         updateLevel();
     }
     private void Update()
@@ -124,7 +130,7 @@ public class GameController : MonoBehaviour
         {
             isStar = false;
             isEnd = true;
-            enemyTalk.text = "You Loss";
+            enemyTalk.text = "You Lost";
         }
         
     }
@@ -147,7 +153,16 @@ public class GameController : MonoBehaviour
     }
     void waitEnemyAttact()
     {
-        isEnd = true;
+        int temp = --GameObject.Find("Player").GetComponent<LayerController>().heart;
+        heart[temp].SetActive(false);
+        if (temp == 0)
+        {
+            isEnd = true;
+        }
+        else
+        {
+            Invoke("waitNext", 1f);
+        }
     }
     void correctAnswer()
     {
@@ -158,7 +173,7 @@ public class GameController : MonoBehaviour
     }
     void notCorrectAnswer()
     {
-        enemyTalk.text = "You Loss";
+        enemyTalk.text = "You Lost";
         float timeBombExplore = 2.7f;
         GameObject.Find("Player").GetComponent<LayerController>().PlayerAttack(timeBombExplore);
         GameObject.Find("Enemy").GetComponent<Enemy>().enemyAttack();
@@ -178,9 +193,10 @@ public class GameController : MonoBehaviour
                 notCorrectAnswer();
             }
             canChoose = false;
+            timeShowAnswer = 9;
+            showCorrectAnswer();
         }
-        timeShowAnswer = 9;
-        showCorrectAnswer();
+        
     }
     void showCorrectAnswer()
     {
@@ -220,6 +236,7 @@ public class GameController : MonoBehaviour
         timeCountdown = currentVocabulary.Count;
         isStar = true;
         valuesBloos = currentVocabulary.Count;
+        GameObject.Find("AudioController").GetComponent<AudioController>().changedAudio(1);
     }
     void createVocabulary()
     {
@@ -237,7 +254,7 @@ public class GameController : MonoBehaviour
             new EnglishWord("suggest", "gợi ý", "/səˈdʒɛst/", "(v)"),
             new EnglishWord("several", "một số", "/ˈsɛvrəl/", "(det)"),
             new EnglishWord("manufacturer", "nhà sản xuất", "/ˌmænjuˈfæktʃərər/", "(n)"),
-            new EnglishWord("sculptures", "điêu khắc", "/ˈskʌlptʃərz/", "(n)"),
+            new EnglishWord("sculptures", "tượng điêu khắc", "/ˈskʌlptʃərz/", "(n)"),
             new EnglishWord("accomplish", "đạt được", "/əˈkɑmplɪʃ/", "(v)"),
             new EnglishWord("achieve", "đạt được", "/əˈtʃiv/", "(v)"),
             new EnglishWord("reach", "đạt được", "/riːʧ/", "(v)"),

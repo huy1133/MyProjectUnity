@@ -6,9 +6,15 @@ public class LayerController : MonoBehaviour
 {
     [SerializeField] GameObject bomb;
     [SerializeField] Transform bombTransform;
+    Rigidbody2D rigidbody2D;
+    public Animator PlayerAnimator;
     bool check;
+    public int heart;
     private void Start()
     {
+        rigidbody2D = GetComponent<Rigidbody2D>();
+        PlayerAnimator = GetComponent<Animator>();
+        heart = 2;
         check = true;
         bomb.transform.position = bombTransform.position;
         bomb.SetActive(false);
@@ -20,6 +26,11 @@ public class LayerController : MonoBehaviour
             bomb.transform.position = bombTransform.position;
             bomb.SetActive(true);
         }
+        if (heart == 1)
+        {
+            rigidbody2D.constraints = ~RigidbodyConstraints2D.FreezeAll;
+        }
+        Debug.Log(heart);
     }
     private void can()
     {
