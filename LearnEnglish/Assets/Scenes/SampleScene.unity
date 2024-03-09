@@ -2949,6 +2949,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1160356261127867848, guid: be1bc4cd1950b9e4c988caef2337748d, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1ab4baffab0e4c74d9b4bada47bb91e7, type: 2}
     - target: {fileID: 7878350319992209165, guid: be1bc4cd1950b9e4c988caef2337748d, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
@@ -6795,7 +6799,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -6904,7 +6908,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d6063e421a1fc4288ad31b584a5dbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audio: {fileID: 0}
   backGround: {fileID: 8300000, guid: 3eaae52f19bb1944989e6d7864da25c1, type: 3}
   inGame: {fileID: 8300000, guid: b0f8bbc7217b7dd4092c5184c2536ceb, type: 3}
 --- !u!1 &811573611

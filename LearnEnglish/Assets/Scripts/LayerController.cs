@@ -30,7 +30,6 @@ public class LayerController : MonoBehaviour
         {
             rigidbody2D.constraints = ~RigidbodyConstraints2D.FreezeAll;
         }
-        Debug.Log(heart);
     }
     private void can()
     {
@@ -52,7 +51,19 @@ public class LayerController : MonoBehaviour
             check = false;
             Invoke("can", 0.5f);
             Invoke("explore", timeExplore);
+            if(timeExplore == 2.7f)
+            {
+                Invoke("hit", timeExplore);
+            }
        }
     }
-    
+    private void hit()
+    {
+        PlayerAnimator.SetBool("hit", true);
+        Invoke("stopHit", 0.5f);
+    }
+    private void stopHit()
+    {
+        PlayerAnimator.SetBool("hit", false);
+    }
 }
