@@ -6,19 +6,40 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform car;
     [SerializeField] float speedMove;
-    Vector3 distance;
+    Vector3 offset;
+    bool isFollow;
+    
     // Start is called before the first frame update
     void Start()
     {
-        distance = transform.position - car.position;
+        isFollow = false;
+        
     }
+    
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        Vector3 vectorto = distance+car.position;
-        vectorto.y=distance.y;
-        transform.position =Vector3.Slerp(transform.position,vectorto,speedMove);
-       
+
+        if (isFollow)
+        {
+            Vector3 vectorto = offset + car.position;
+            transform.position = vectorto;
+        }
+        else
+        {
+            float newX = Mathf.Lerp(transform.position.x, 0, 0.03f);
+            transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+            if (transform.position.x < 1)
+            {
+                starfollow();
+            }
+        }
+
+        transform.LookAt(car);
+    }
+    void starfollow()
+    {
+        offset = transform.position - car.position;
+        isFollow = true;
     }
 }

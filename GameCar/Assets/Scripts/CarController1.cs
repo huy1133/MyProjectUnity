@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum Turn
 {
@@ -16,11 +17,13 @@ public class CarController1 : MonoBehaviour
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject[] cars;
     [SerializeField] GameObject[] maps;
+
         
     Rigidbody rb;
     public bool canMove;
     Vector3 moveForce;
     Turn turn;
+ 
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag!="Ground")
@@ -31,6 +34,7 @@ public class CarController1 : MonoBehaviour
     }
     void Start()
     {
+       
         rb = GetComponent<Rigidbody>();
         turn = Turn.none;
         canMove = true;
@@ -62,7 +66,7 @@ public class CarController1 : MonoBehaviour
     void Update()
     {
         input();
-
+        
     }
     void input()
     {
@@ -87,21 +91,26 @@ public class CarController1 : MonoBehaviour
     {
         moveForce = transform.forward*speed;
         rb.AddForce(moveForce);
-        if(turn == Turn.left)
+        
+        if (turn == Turn.left)
         {
             transform.Rotate(Vector3.up*steerAngle*-1);
+           
             trail[0].emitting=true;
             trail[1].emitting = true;
             particles[0].gameObject.SetActive(true);
             particles[1].gameObject.SetActive(true);
+            
         }
         else if(turn == Turn.right)
         {
             transform.Rotate(Vector3.up * steerAngle);
+            
             trail[0].emitting = true;
             trail[1].emitting = true;
             particles[0].gameObject.SetActive(true);
             particles[1].gameObject.SetActive(true);
+            
         }
         else
         {
@@ -109,6 +118,7 @@ public class CarController1 : MonoBehaviour
             trail[1].emitting = false;
             particles[0].gameObject.SetActive(false);
             particles[1].gameObject.SetActive(false);
+            
         }
     }
 }

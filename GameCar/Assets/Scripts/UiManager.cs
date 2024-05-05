@@ -99,9 +99,9 @@ public class UiManager : MonoBehaviour
     {
         loadingGamePanner.SetActive(true);
         AsyncOperation async = SceneManager.LoadSceneAsync(1);
-        while (async.isDone)
+        while (!async.isDone)
         {
-            iconLoading.GetComponent<RectTransform>().Rotate(new Vector3(0,0,90)*Time.deltaTime);
+            iconLoading.GetComponent<RectTransform>().Rotate(new Vector3(0,0,-180)*Time.deltaTime);
             yield return null;
         }
     }

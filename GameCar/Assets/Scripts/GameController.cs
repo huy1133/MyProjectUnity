@@ -29,6 +29,7 @@ public class GameController1 : MonoBehaviour
     float timeStartCount;
     float timeIncreaseStar;
     float timeToReStar;
+    string textEndGame;
     void Start()
     {
         createPolice();
@@ -38,7 +39,7 @@ public class GameController1 : MonoBehaviour
         numberPolice = 5;
         timeBorn = 0;
         timeCanBorn = 0.5f;
-        
+        textEndGame = "";
         timeStartCount = 0;
         timeIncreaseStar = 30;
     }
@@ -121,13 +122,16 @@ public class GameController1 : MonoBehaviour
                 star[i].sprite = imgStar[0];
             }
         }
-        
-        
         timePlay.text = "" + (int)time+"s";
         if (timeStartCount / timeIncreaseStar >= 1)
         {
             Star++;
             timeStartCount = 0;
+            if (Star >= 5&& PlayerPrefs.GetInt("UnlockedMap" + (PlayerPrefs.GetInt("CurrentMap") + 1).ToString())==0)
+            {
+                PlayerPrefs.SetInt("UnlockedMap" + (PlayerPrefs.GetInt("CurrentMap") + 1).ToString(), 1);
+                textEndGame = "Unlocked New Map";
+            }
         }
         slider.value = timeStartCount / timeIncreaseStar;
         if(!isGame)
@@ -140,7 +144,8 @@ public class GameController1 : MonoBehaviour
                 PlayerPrefs.SetInt(leverstr, Star);
                 PlayerPrefs.Save();
             }
-            textTimeToReStart.text = "Start Again In " + (int)timeToReStar + "s";
+            
+            textTimeToReStart.text = textEndGame+" Start Again In " + (int)timeToReStar + "s";
             if (timeToReStar < 0)
             {
                 SceneManager.LoadScene(1);
