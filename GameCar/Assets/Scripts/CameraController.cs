@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            float newX = Mathf.Lerp(transform.position.x, 0, 0.03f);
+            float newX = Mathf.Lerp(transform.position.x, 0, 3*Time.deltaTime);
             transform.position = new Vector3(newX, transform.position.y, transform.position.z);
             if (transform.position.x < 1)
             {

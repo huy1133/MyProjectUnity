@@ -30,9 +30,13 @@ public class GameController1 : MonoBehaviour
     float timeIncreaseStar;
     float timeToReStar;
     string textEndGame;
-    void Start()
+    private void Awake()
     {
         createPolice();
+    }
+    void Start()
+    {
+        //createPolice();
         timeToReStar = 5;
         Star = 0;
         time = 0;

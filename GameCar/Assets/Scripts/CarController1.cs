@@ -24,6 +24,7 @@ public class CarController1 : MonoBehaviour
     Vector3 moveForce;
     Turn turn;
  
+
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag!="Ground")
@@ -31,6 +32,22 @@ public class CarController1 : MonoBehaviour
             canMove = false;
             explosion.Play();
         }
+    }
+    private void Awake()
+    {
+        foreach (GameObject temp in cars)
+        {
+            temp.SetActive(false);
+        }
+        cars[PlayerPrefs.GetInt("CurrentCar")].SetActive(true);
+        foreach (GameObject temp in maps)
+        {
+            if (temp != maps[PlayerPrefs.GetInt("CurrentMap")])
+            {
+                Destroy(temp);
+            }
+        }
+        maps[PlayerPrefs.GetInt("CurrentMap")].SetActive(true);
     }
     void Start()
     {
@@ -43,16 +60,6 @@ public class CarController1 : MonoBehaviour
         particles[0].gameObject.SetActive(false);
         particles[1].gameObject.SetActive(false);
         explosion.Stop();
-        foreach(GameObject temp in cars)
-        {
-            temp.SetActive(false);
-        }
-        cars[PlayerPrefs.GetInt("CurrentCar")].SetActive(true);
-        foreach (GameObject temp in maps)
-        {
-            temp.SetActive(false);
-        }
-        maps[PlayerPrefs.GetInt("CurrentMap")].SetActive(true);
     }
 
     // Update is called once per frame

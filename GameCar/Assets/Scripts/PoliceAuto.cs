@@ -24,16 +24,16 @@ public class PoliceAuto : MonoBehaviour
     {
         if (collision.gameObject.tag != "Ground")
         {
-            explosion.Play();
+            explosion.gameObject.SetActive(true);
             isDie = true;
             trail[0].emitting = false;
             trail[1].emitting = false;
             particles[0].gameObject.SetActive(false);
             particles[1].gameObject.SetActive(false);
             Invoke("disable",3);
-            if(collision.gameObject.tag!="Police"&& collision.gameObject.tag != "Player")
+            if(collision.gameObject.tag!="Police"&& collision.gameObject.tag != "Player" && collision.gameObject.tag != "water")
             {
-                Destroy(collision.gameObject);
+                collision.gameObject.SetActive(false);
             }
         }
     }
@@ -50,7 +50,7 @@ public class PoliceAuto : MonoBehaviour
         currentTimeCanDrift = 0;
         speed = 40f;
         isDie = false;
-        explosion.Stop();
+        explosion.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -133,7 +133,7 @@ public class PoliceAuto : MonoBehaviour
     }
     void disable()
     {
-        explosion.Stop();
+        explosion.gameObject.SetActive(false);
         isDie = false;
         gameObject.SetActive(false);
     }

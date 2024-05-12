@@ -10148,6 +10148,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8291311031714759223, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291311031714759223, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291311031714759223, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].cycleCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291311031714759223, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9129785816035097932, guid: 99506d9f096ebb5479ddd6bdaaeb99b8, type: 3}
       propertyPath: m_Name
       value: Explosion
