@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] GameObject islock;
     [SerializeField] GameObject loadingGamePanner;
     [SerializeField] GameObject iconLoading;
+    [SerializeField] Text TextKey;
 
     enum Page
     {
@@ -63,6 +65,7 @@ public class UiManager : MonoBehaviour
                 islock.SetActive(true) ;
                 next.SetActive(false);
             }
+            TextKey.text = PlayerPrefs.GetInt("key") + " key";
         }
         else
         {
@@ -82,6 +85,15 @@ public class UiManager : MonoBehaviour
             }
         }
         
+    }
+    public void unlockCarButton()
+    {
+        if (PlayerPrefs.GetInt("key") >= 1 && PlayerPrefs.GetInt("UnlockedCar" + PlayerPrefs.GetInt("CurrentCar").ToString())==0)
+        {
+            PlayerPrefs.SetInt("UnlockedCar" + PlayerPrefs.GetInt("CurrentCar").ToString(), 1);
+            PlayerPrefs.SetInt("key", PlayerPrefs.GetInt("key") - 1);
+            PlayerPrefs.Save();
+        }
     }
     public void nextPageButton()
     {

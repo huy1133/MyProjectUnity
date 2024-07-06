@@ -11,6 +11,7 @@ public class adManager : MonoBehaviour
     [SerializeField] Button rewardAdLoad;
     [SerializeField] Button rewardAdShow;
     [SerializeField] Text coinText;
+    [SerializeField] Text noice;
 
     public string appId = "ca-app-pub-7644187281063920~2553749138";
 
@@ -37,6 +38,21 @@ public class adManager : MonoBehaviour
     private void Update()
     {
         coinText.text = "coin: " + PlayerPrefs.GetInt("Coin");
+        if(rewardedAd == null)
+        {
+            noice.text = "no ad";
+        }
+        else
+        {
+            if (!rewardedAd.CanShowAd())
+            {
+                noice.text = "ad is load";
+            }
+            else
+            {
+                noice.text = "ad is availible";
+            }
+        }
     }
     #region bannerAd
     public void CreateBannerView()
@@ -73,6 +89,7 @@ public class adManager : MonoBehaviour
     #region rewardAd
     public void LoadRewardedAd()
     {
+       
         // Clean up the old ad before loading a new one.
         if (rewardedAd != null)
         {
@@ -102,6 +119,7 @@ public class adManager : MonoBehaviour
 
                 rewardedAd = ad;
             });
+            
     }
     public void ShowRewardedAd()
     {

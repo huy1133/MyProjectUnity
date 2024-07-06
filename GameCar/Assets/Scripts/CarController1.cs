@@ -16,7 +16,6 @@ public class CarController1 : MonoBehaviour
     [SerializeField] ParticleSystem[] particles;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject[] cars;
-    [SerializeField] GameObject[] maps;
 
         
     Rigidbody rb;
@@ -40,14 +39,6 @@ public class CarController1 : MonoBehaviour
             temp.SetActive(false);
         }
         cars[PlayerPrefs.GetInt("CurrentCar")].SetActive(true);
-        foreach (GameObject temp in maps)
-        {
-            if (temp != maps[PlayerPrefs.GetInt("CurrentMap")])
-            {
-                Destroy(temp);
-            }
-        }
-        maps[PlayerPrefs.GetInt("CurrentMap")].SetActive(true);
     }
     void Start()
     {

@@ -13,7 +13,6 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         isFollow = false;
-        
     }
     
 

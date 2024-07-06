@@ -17,7 +17,7 @@ public class GameController1 : MonoBehaviour
     [SerializeField] Text textTimeToReStart;
     [SerializeField] GameObject loadingPanner;
     [SerializeField] GameObject iconLoading;
-
+    [SerializeField] GameObject[] maps;
     List<GameObject> policeList = new List<GameObject>();
     
     int Star;
@@ -33,6 +33,14 @@ public class GameController1 : MonoBehaviour
     private void Awake()
     {
         createPolice();
+        foreach (GameObject temp in maps)
+        {
+            if (temp != maps[PlayerPrefs.GetInt("CurrentMap")])
+            {
+                Destroy(temp);
+            }
+        }
+        maps[PlayerPrefs.GetInt("CurrentMap")].SetActive(true);
     }
     void Start()
     {
@@ -154,6 +162,7 @@ public class GameController1 : MonoBehaviour
             {
                 SceneManager.LoadScene(1);
             }
+            GameObject.Find("AdsMannanger").GetComponent<AdsMannager>().ShowButtonAds();
         }
     }
     public void exitToMenuButton()
