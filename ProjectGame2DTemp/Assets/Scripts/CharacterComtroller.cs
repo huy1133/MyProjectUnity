@@ -46,7 +46,7 @@ public class CharacterComtroller : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        if (collision.gameObject.tag == "Ground"|| collision.gameObject.tag == "Box")
         {
             isGround = true;
             rb.gravityScale = 4;
@@ -58,7 +58,7 @@ public class CharacterComtroller : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Box")
         {
             isGround = false;
         }
