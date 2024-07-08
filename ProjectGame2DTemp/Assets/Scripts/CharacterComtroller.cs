@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,6 +25,8 @@ public class CharacterComtroller : MonoBehaviour
     [SerializeField] float timeCountAttack;
     [SerializeField] float timeCanFalling;
     [SerializeField] GameObject AttackPoint;
+    [SerializeField] AudioSource sound;
+    [SerializeField] AudioClip runClip, jumpClip, superJumpClip, touchGroundClip, flyClip;
 
     CharacterStatic characterStatic;
     private float movementInputDirection;
@@ -34,21 +37,32 @@ public class CharacterComtroller : MonoBehaviour
 
     bool isGround;
     bool isJump;
+    bool isdifferentGround;
     bool canSuperJump;
     bool isSuperJump;
     float timeCanSuperJump;
     float timeCountCanFalling;
     bool isAttack;
     float timeAttack;
+    float timeSoundRun;
+    float timeSoundFall;
 
     bool canMove;
     bool canJump;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground"|| collision.gameObject.tag == "Box")
+        if (collision.gameObject.tag == "Ground")
         {
             isGround = true;
+            rb.gravityScale = 4;
+            sound.clip = touchGroundClip;
+            sound.Play();
+            timeSoundRun = 0.2f;
+        }
+        if(collision.gameObject.tag == "Box")
+        {
+            isdifferentGround = true;
             rb.gravityScale = 4;
         }
         if (collision.gameObject.tag == "Wall")
@@ -58,9 +72,13 @@ public class CharacterComtroller : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Box")
+        if (collision.gameObject.tag == "Ground")
         {
             isGround = false;
+        }
+        if (collision.gameObject.tag == "Box")
+        {
+            isdifferentGround = false;
         }
     }
    
@@ -70,13 +88,15 @@ public class CharacterComtroller : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sp = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        isGround = true;
+        isGround = false;
+        isdifferentGround = false;
         isJump = false;
         isSuperJump = false;
         canSuperJump = false;
         isAttack = false;
         timeAttack = 0;
-
+        timeSoundRun = 0.3f;
+        timeSoundFall = 1f;
         canMove = true; canJump = true;
         
     }
@@ -92,6 +112,8 @@ public class CharacterComtroller : MonoBehaviour
     private void Update()
     {
         inputControl();
+        timeSoundRun = timeSoundRun<0? timeSoundRun: timeSoundRun- Time.deltaTime;
+        timeSoundFall = timeSoundFall<=0?timeCanFalling:timeSoundFall- Time.deltaTime;        
     }
     private void inputControl()
     {
@@ -99,7 +121,7 @@ public class CharacterComtroller : MonoBehaviour
         AttackPoint.SetActive(isAttack);
         if (isAttack)
         {
-            if(timeAttack <=timeCountAttack)
+            if (timeAttack <= timeCountAttack)
             {
                 timeAttack += Time.deltaTime;
             }
@@ -114,8 +136,9 @@ public class CharacterComtroller : MonoBehaviour
             {
                 sp.flipX = movementInputDirection > 0 ? false : true;
                 AttackPoint.transform.localPosition = new Vector2(movementInputDirection > 0 ? 1 : -1, 0);
+
             }
-            if (isGround)
+            if (isGround||isdifferentGround)
             {
                 if (Input.GetKey(KeyCode.Space))
                 {
@@ -124,6 +147,7 @@ public class CharacterComtroller : MonoBehaviour
                     timeCanSuperJump = 0;
                     //isGround = false;
                     applyStatic(CharacterStatic.jump);
+                    applySound(CharacterStatic.jump);
                 }
                 else if (Input.GetKey(KeyCode.F))
                 {
@@ -134,6 +158,7 @@ public class CharacterComtroller : MonoBehaviour
                 else if (movementInputDirection != 0)
                 {
                     applyStatic(CharacterStatic.run);
+                    applySound(CharacterStatic.run);
                 }
                 else
                 {
@@ -151,6 +176,7 @@ public class CharacterComtroller : MonoBehaviour
                     isSuperJump = true;
                     canSuperJump = false;
                     applyStatic(CharacterStatic.supperJump);
+                    applySound(CharacterStatic.supperJump);
                 }
                 else if(rb.velocity.y<0)
                 {
@@ -164,8 +190,10 @@ public class CharacterComtroller : MonoBehaviour
                     }
                     if (Input.GetKey(KeyCode.B))
                     {
-                        rb.gravityScale = 0.1f;
+                        rb.velocity = Vector3.zero;
+                        rb.gravityScale = 1f;
                         applyStatic(CharacterStatic.fall);
+                        applySound(CharacterStatic.fall);
                     }
                     else
                     {
@@ -184,7 +212,6 @@ public class CharacterComtroller : MonoBehaviour
         }
         
     }
-    
     private void applyStatic(CharacterStatic currentStatic)
     {
         if (characterStatic != currentStatic)
@@ -233,6 +260,38 @@ public class CharacterComtroller : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, forceSupperJump);
                 isSuperJump = false;
             }
+        }
+    }
+    private void applySound(CharacterStatic state)
+    {
+        switch (state)
+        {
+            case CharacterStatic.run:
+                if (timeSoundRun <= 0)
+                {
+                    sound.clip = runClip;
+                    sound.Play();
+                    timeSoundRun = 0.3f;
+                }
+                break;
+            case CharacterStatic.jump:
+                sound.clip = jumpClip;
+                sound.Play();   
+                break;
+            case CharacterStatic.supperJump:
+                sound.clip = superJumpClip;
+                sound.Play();
+                break;
+            case CharacterStatic.fall:
+                if (timeSoundFall <= 0||!sound.isPlaying)
+                {
+                    sound.clip = flyClip;
+                    sound.Play();
+                    timeSoundFall = 1f;
+                }
+                break;
+            default: break;
+
         }
     }
 }
