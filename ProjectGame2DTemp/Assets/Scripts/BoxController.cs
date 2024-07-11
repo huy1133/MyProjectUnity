@@ -19,8 +19,24 @@ public class BoxController : MonoBehaviour
         canPlaySound = true;
         timeResetAnim = 2f;
     }
-
-
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Character" || collision.gameObject.tag == "Box")
+        {
+            rb.gravityScale = 35;
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Character" || collision.gameObject.tag == "Box")
+        {
+            rb.gravityScale = 35;
+        }
+        else
+        {
+            rb.gravityScale = 5;
+        }
+    }
     private void Update()
     {
         timeResetAnim = timeResetAnim<=0 ? timeResetAnim : timeResetAnim - Time.deltaTime;    

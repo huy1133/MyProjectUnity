@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Wall
   - Box
+  - Character
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - enemy
   - 
   - 
   - 

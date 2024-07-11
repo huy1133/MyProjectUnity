@@ -26,7 +26,8 @@ public class CharacterComtroller : MonoBehaviour
     [SerializeField] float timeCanFalling;
     [SerializeField] GameObject AttackPoint;
     [SerializeField] AudioSource sound;
-    [SerializeField] AudioClip runClip, jumpClip, superJumpClip, touchGroundClip, flyClip;
+    [SerializeField] AudioClip runClip, jumpClip, superJumpClip, touchGroundClip, flyClip, attackClip;
+    [SerializeField] int level;
 
     CharacterStatic characterStatic;
     private float movementInputDirection;
@@ -50,6 +51,7 @@ public class CharacterComtroller : MonoBehaviour
     bool canMove;
     bool canJump;
 
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Ground")
@@ -64,10 +66,29 @@ public class CharacterComtroller : MonoBehaviour
         {
             isdifferentGround = true;
             rb.gravityScale = 4;
+            if (!isGround)
+            {
+                sound.clip = touchGroundClip;
+                sound.Play();
+                timeSoundRun = 0.2f;
+            }
         }
-        if (collision.gameObject.tag == "Wall")
+        //if (collision.gameObject.tag == "Wall")
+        //{
+        //    rb.velocity = new Vector2(0, rb.velocity.y);
+        //}
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    { 
+        if (collision.gameObject.tag == "Ground")
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            isGround = true;
+            rb.gravityScale = 4;
+        }
+        if (collision.gameObject.tag == "Box")
+        {
+            isdifferentGround = true;
+            rb.gravityScale = 4;
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
@@ -98,12 +119,11 @@ public class CharacterComtroller : MonoBehaviour
         timeSoundRun = 0.3f;
         timeSoundFall = 1f;
         canMove = true; canJump = true;
-        
     }
 
     private void FixedUpdate()
     {
-        if(!isAttack)
+        if (!isAttack)
         {
             applyMovement();
         }
@@ -117,7 +137,6 @@ public class CharacterComtroller : MonoBehaviour
     }
     private void inputControl()
     {
-        movementInputDirection = Input.GetAxisRaw("Horizontal");
         AttackPoint.SetActive(isAttack);
         if (isAttack)
         {
@@ -129,16 +148,18 @@ public class CharacterComtroller : MonoBehaviour
             {
                 isAttack = false;
             }
+            movementInputDirection = 0;
         }
-        else
+        else if(level>=0)
         {
+            movementInputDirection = Input.GetAxisRaw("Horizontal");
             if (movementInputDirection != 0)
             {
                 sp.flipX = movementInputDirection > 0 ? false : true;
                 AttackPoint.transform.localPosition = new Vector2(movementInputDirection > 0 ? 1 : -1, 0);
 
             }
-            if (isGround||isdifferentGround)
+            if (isGround || isdifferentGround)
             {
                 if (Input.GetKey(KeyCode.Space))
                 {
@@ -149,11 +170,12 @@ public class CharacterComtroller : MonoBehaviour
                     applyStatic(CharacterStatic.jump);
                     applySound(CharacterStatic.jump);
                 }
-                else if (Input.GetKey(KeyCode.F))
+                else if (Input.GetKey(KeyCode.F)&&level>=3)
                 {
                     applyStatic(CharacterStatic.attack);
                     isAttack = true;
                     timeAttack = 0;
+                    applySound(CharacterStatic.attack);
                 }
                 else if (movementInputDirection != 0)
                 {
@@ -171,7 +193,7 @@ public class CharacterComtroller : MonoBehaviour
                 {
                     timeCanSuperJump += Time.deltaTime;
                 }
-                else if (canSuperJump &&Input.GetKey(KeyCode.Space))
+                else if (canSuperJump && Input.GetKey(KeyCode.Space) && level>=1)
                 {
                     isSuperJump = true;
                     canSuperJump = false;
@@ -188,7 +210,7 @@ public class CharacterComtroller : MonoBehaviour
                     {
                         applyStatic(CharacterStatic.fall);
                     }
-                    if (Input.GetKey(KeyCode.B))
+                    if (Input.GetKey(KeyCode.B)&& level>=2)
                     {
                         rb.velocity = Vector3.zero;
                         rb.gravityScale = 1f;
@@ -289,6 +311,10 @@ public class CharacterComtroller : MonoBehaviour
                     sound.Play();
                     timeSoundFall = 1f;
                 }
+                break;
+            case CharacterStatic.attack:
+                sound.clip = attackClip;
+                sound.Play();
                 break;
             default: break;
 
