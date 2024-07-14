@@ -27,7 +27,6 @@ public class CharacterComtroller : MonoBehaviour
     [SerializeField] GameObject AttackPoint;
     [SerializeField] AudioSource sound;
     [SerializeField] AudioClip runClip, jumpClip, superJumpClip, touchGroundClip, flyClip, attackClip;
-    [SerializeField] int level;
 
     CharacterStatic characterStatic;
     private float movementInputDirection;
@@ -47,36 +46,19 @@ public class CharacterComtroller : MonoBehaviour
     float timeAttack;
     float timeSoundRun;
     float timeSoundFall;
-
+    int level;
     bool canMove;
     bool canJump;
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        if ((collision.gameObject.tag == "Ground"|| collision.gameObject.tag == "Box" )&& !isGround)
         {
-            isGround = true;
-            rb.gravityScale = 4;
             sound.clip = touchGroundClip;
             sound.Play();
             timeSoundRun = 0.2f;
         }
-        if(collision.gameObject.tag == "Box")
-        {
-            isdifferentGround = true;
-            rb.gravityScale = 4;
-            if (!isGround)
-            {
-                sound.clip = touchGroundClip;
-                sound.Play();
-                timeSoundRun = 0.2f;
-            }
-        }
-        //if (collision.gameObject.tag == "Wall")
-        //{
-        //    rb.velocity = new Vector2(0, rb.velocity.y);
-        //}
     }
     private void OnCollisionStay2D(Collision2D collision)
     { 
@@ -118,7 +100,9 @@ public class CharacterComtroller : MonoBehaviour
         timeAttack = 0;
         timeSoundRun = 0.3f;
         timeSoundFall = 1f;
-        canMove = true; canJump = true;
+        canMove = true; 
+        canJump = true;
+        level = PlayerPrefs.GetInt("Level");
     }
 
     private void FixedUpdate()
