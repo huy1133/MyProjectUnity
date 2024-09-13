@@ -37,6 +37,13 @@ public class BoxController : MonoBehaviour
             rb.gravityScale = 5;
         }
     }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Box")
+    //    {
+    //        push(collision.gameObject);
+    //    }
+    //}
     private void Update()
     {
         timeResetAnim = timeResetAnim<=0 ? timeResetAnim : timeResetAnim - Time.deltaTime;    
@@ -57,6 +64,19 @@ public class BoxController : MonoBehaviour
         {
             sound.Stop();
             canPlaySound = true;
+        }
+    }
+    void push(GameObject gameObj)
+    {
+        float force = 1000f;
+        Rigidbody2D tempRB = gameObj.GetComponent<Rigidbody2D>();
+        if (gameObj.transform.position.x < transform.position.x)
+        {
+            rb.AddForce(Vector2.right * force);
+        }
+        else
+        {
+            rb.AddForce(Vector2.left * force);
         }
     }
 }

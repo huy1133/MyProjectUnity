@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 enum CharacterStatic
@@ -48,20 +49,21 @@ public class CharacterComtroller : MonoBehaviour
     float timeSoundFall;
     int level;
     bool canMove;
+    bool canMoveRight;
+    bool canMoveLeft;   
     bool canJump;
 
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((collision.gameObject.tag == "Ground"|| collision.gameObject.tag == "Box" )&& !isGround)
+        if (collision.gameObject.tag == "Gate")
         {
-            sound.clip = touchGroundClip;
-            sound.Play();
-            timeSoundRun = 0.2f;
+            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level") + 1);
+            PlayerPrefs.Save(); 
+            SceneManager.LoadScene(PlayerPrefs.GetInt("Level"));
         }
     }
-    private void OnCollisionStay2D(Collision2D collision)
-    { 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
         if (collision.gameObject.tag == "Ground")
         {
             isGround = true;
@@ -72,8 +74,21 @@ public class CharacterComtroller : MonoBehaviour
             isdifferentGround = true;
             rb.gravityScale = 4;
         }
+        if (collision.gameObject.tag == "Wall")
+        {
+            if (collision.gameObject.transform.parent.position.x < transform.position.x)
+            {
+                canMoveLeft = false;
+            }
+            
+            if (collision.gameObject.transform.parent.position.x > transform.position.x)
+            {
+                canMoveRight = false;
+            }
+            
+        }
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Ground")
         {
@@ -82,6 +97,11 @@ public class CharacterComtroller : MonoBehaviour
         if (collision.gameObject.tag == "Box")
         {
             isdifferentGround = false;
+        }
+        if (collision.gameObject.tag == "Wall")
+        {
+            canMoveLeft = true; 
+            canMoveRight = true;
         }
     }
    
@@ -103,6 +123,8 @@ public class CharacterComtroller : MonoBehaviour
         canMove = true; 
         canJump = true;
         level = PlayerPrefs.GetInt("Level");
+        canMoveLeft = true;
+        canMoveRight = true;
     }
 
     private void FixedUpdate()
@@ -116,14 +138,15 @@ public class CharacterComtroller : MonoBehaviour
     private void Update()
     {
         inputControl();
-        timeSoundRun = timeSoundRun<0? timeSoundRun: timeSoundRun- Time.deltaTime;
-        timeSoundFall = timeSoundFall<=0?timeCanFalling:timeSoundFall- Time.deltaTime;        
+        timeSoundRun = timeSoundRun < 0 ? timeSoundRun: timeSoundRun - Time.deltaTime;
+        timeSoundFall = timeSoundFall<= 0 ? timeCanFalling : timeSoundFall - Time.deltaTime;        
     }
     private void inputControl()
     {
         AttackPoint.SetActive(isAttack);
         if (isAttack)
         {
+            movementInputDirection = 0;
             if (timeAttack <= timeCountAttack)
             {
                 timeAttack += Time.deltaTime;
@@ -132,16 +155,14 @@ public class CharacterComtroller : MonoBehaviour
             {
                 isAttack = false;
             }
-            movementInputDirection = 0;
         }
         else if(level>=0)
         {
             movementInputDirection = Input.GetAxisRaw("Horizontal");
             if (movementInputDirection != 0)
             {
-                sp.flipX = movementInputDirection > 0 ? false : true;
-                AttackPoint.transform.localPosition = new Vector2(movementInputDirection > 0 ? 1 : -1, 0);
-
+                sp.flipX = movementInputDirection < 0 ? true : false;
+                AttackPoint.transform.localPosition = new Vector2(math.abs(AttackPoint.transform.localPosition.x)*(sp.flipX ? -1 : 1), 0);
             }
             if (isGround || isdifferentGround)
             {
@@ -203,9 +224,7 @@ public class CharacterComtroller : MonoBehaviour
                     }
                     else
                     {
-                       
                         rb.gravityScale = 4;
-                           
                     }
                 }
                 else
@@ -250,8 +269,23 @@ public class CharacterComtroller : MonoBehaviour
     }
     private void applyMovement()
     {
-        if(canMove)
+        //d d -d
+        //s d -d
+        //s s -d
+        //d s -s
+        if (canMove)
         {
+            if (!isGround && !isdifferentGround)
+            {
+                if ((movementInputDirection > 0 && !canMoveRight))
+                {
+                    movementInputDirection = 0;
+                }
+                if ((movementInputDirection < 0 && !canMoveLeft))
+                {
+                    movementInputDirection = 0;
+                }
+            }
             rb.velocity = new Vector2(speedMove * movementInputDirection, rb.velocity.y);
         }
         if(canJump)

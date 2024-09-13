@@ -8,6 +8,8 @@ TagManager:
   - Wall
   - Box
   - Character
+  - Gate
+  - PlayerMiniMap
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - Water
   - UI
   - enemy
-  - 
+  - MiniMap
   - 
   - 
   - 

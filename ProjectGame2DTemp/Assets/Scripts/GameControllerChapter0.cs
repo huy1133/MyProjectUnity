@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using DG.Tweening;
 using Sequence = DG.Tweening.Sequence;
+using UnityEngine.SceneManagement;
 
 public class GameControllerChapter0 : MonoBehaviour
 {
@@ -13,10 +14,15 @@ public class GameControllerChapter0 : MonoBehaviour
     [SerializeField] AudioClip BlingClip;
     [SerializeField] GameObject character;
     [SerializeField] Transform currentPointCamera;
-
+    [SerializeField] GameObject backGround;
+    [SerializeField] Vector3[] posTree;
+    [SerializeField] Vector3[] posBush;
+    [SerializeField] GameObject[] diffirentOBJ;
     Vector3[] PointGround = new Vector3[3];
     List<GameObject> GOBJGround = new List<GameObject>();
     List<GameObject> GOBJGrass = new List<GameObject>();
+    Dictionary<int,GameObject> GOJTree = new Dictionary<int,GameObject>();
+    Dictionary<int, GameObject> GOJBush = new Dictionary<int, GameObject>();
     Vector3 currentPointGround;
     float stepGround;
     private void Awake()
@@ -34,9 +40,72 @@ public class GameControllerChapter0 : MonoBehaviour
     private void Update()
     {
         updateGround();
+        updateTreeAndBush();
+        updateDiffirent();
     }
+    void updateDiffirent()
+    {
+        float distance = 25f;
+        foreach(GameObject @object in diffirentOBJ)
+        {
+            if (Vector3.Distance(@object.transform.position, currentPointCamera.transform.position) <= distance && !@object.activeSelf)
+            {
+                @object.SetActive(true);
+            }
+            else if (Vector3.Distance(@object.transform.position, currentPointCamera.transform.position) > distance && @object.activeSelf)
+            {
+                @object.SetActive(false);
+            }
+        }
+    }
+    void updateTreeAndBush()
+    {
+        float distance = 20f;
+        for(int i=0; i<posTree.Length; i++)
+        {
+            if (Vector3.Distance(posTree[i], currentPointCamera.transform.position) <= distance)
+            {
+                if (!GOJTree.ContainsKey(i))
+                {
+                    GameObject temp = GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().getOBJ(2);
+                    temp.transform.position = posTree[i];
+                    GOJTree.Add(i, temp);
+                }
+            }
+            else
+            {
+                if (GOJTree.ContainsKey(i))
+                {
+                    GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().returnOBJ(GOJTree[i]);
+                    GOJTree.Remove(i);
+                }
+            }
+        }
+        for (int i = 0; i < posBush.Length; i++)
+        {
+            if (Vector3.Distance(posBush[i], currentPointCamera.transform.position) <= distance)
+            {
+                if (!GOJBush.ContainsKey(i))
+                {
+                    GameObject temp = GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().getOBJ(3);
+                    temp.transform.position = posBush[i];
+                    GOJBush.Add(i, temp);
+                }
+            }
+            else
+            {
+                if (GOJBush.ContainsKey(i))
+                {
+                    GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().returnOBJ(GOJBush[i]);
+                    GOJBush.Remove(i);
+                }
+            }
+        }
+    }
+    
     void updateGround()
     {
+        backGround.transform.position =  new Vector3(backGround.transform.position.x,0, backGround.transform.position.y);
         float disCamToP0 = Vector3.Distance(currentPointCamera.position, PointGround[0]);
         float disCamToP1 = Vector3.Distance(currentPointCamera.position, PointGround[1]);
         float disCamToP2 = Vector3.Distance(currentPointCamera.position, PointGround[2]);
@@ -66,7 +135,7 @@ public class GameControllerChapter0 : MonoBehaviour
 
             GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().returnOBJ(GOBJGrass[2]);
             GOBJGrass.RemoveAt(2);
-            GameObject temp1 = GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().getOBJ(3);
+            GameObject temp1 = GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().getOBJ(1);
             temp1.transform.position = PointGround[0];
             GOBJGrass.Insert(0, temp1);
         }
@@ -80,7 +149,7 @@ public class GameControllerChapter0 : MonoBehaviour
 
             GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().returnOBJ(GOBJGrass[0]);
             GOBJGrass.RemoveAt(0);
-            GameObject temp1 = GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().getOBJ(3);
+            GameObject temp1 = GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().getOBJ(1);
             temp1.transform.position = PointGround[2];
             GOBJGrass.Insert(2, temp1);
         }
@@ -92,21 +161,21 @@ public class GameControllerChapter0 : MonoBehaviour
                 temp.transform.position = PointGround[i];
                 GOBJGround.Add(temp);
 
-                GameObject temp1 = GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().getOBJ(3);
+                GameObject temp1 = GameObject.Find("ObjectPooling").GetComponent<PoolingChapter0>().getOBJ(1);
                 temp1.transform.position = PointGround[i];
                 GOBJGrass.Add(temp1);
             }
         }
     }
     void PlayContinuedGame()
-    {
-
+    { 
+        SceneManager.LoadScene(PlayerPrefs.GetInt("Level"));
     }
     void PlayNewGame()
     {
         PlayerPrefs.SetInt("Level", 0);
-        startGame();    
-        //dandelionAction();
+        //startGame();    
+        dandelionAction();
     }
     void startGame()
     {
@@ -135,8 +204,7 @@ public class GameControllerChapter0 : MonoBehaviour
             IntroductionParticle.Play();
             audioSource.clip = BlingClip;
             audioSource.Play();
-            character.SetActive(true);
-            character.transform.position = dandelion.transform.position;
+            startGame();
             dandelion.SetActive(false);
             }
         );
