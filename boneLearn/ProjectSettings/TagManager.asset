@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Snout
+  - Wall
+  - Water
   layers:
   - Default
   - TransparentFX
@@ -13,10 +16,10 @@ TagManager:
   - Water
   - UI
   - 
-  - 
-  - 
+  - Player
+  - Enviroment
   - Ground
-  - 
+  - Snout
   - 
   - 
   - 
