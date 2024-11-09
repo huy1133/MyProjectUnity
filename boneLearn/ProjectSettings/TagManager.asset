@@ -8,6 +8,7 @@ TagManager:
   - Snout
   - Wall
   - Water
+  - Rope
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Enviroment
   - Ground
   - Snout
-  - 
+  - Rope
   - 
   - 
   - 
