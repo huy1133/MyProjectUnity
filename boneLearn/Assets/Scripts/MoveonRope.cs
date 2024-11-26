@@ -17,6 +17,8 @@ public class MoveonRope : MonoBehaviour
     float percentage;
     int total;
     Transform currentPoint;
+    float timeSwing;
+    bool isSwing;
 
     private void Start()
     {
@@ -24,6 +26,8 @@ public class MoveonRope : MonoBehaviour
         percentage = 0.5f;
         a = null;
         speedClimb = 0.2f;
+        timeSwing = 0;
+        isSwing = false;
     }
     void Update()
     {
@@ -49,13 +53,35 @@ public class MoveonRope : MonoBehaviour
                 }
             }
         }
+        if (timeSwing > 0)
+        {
+            timeSwing -= Time.deltaTime;
+            if (!isSwing)
+            {
+               foreach(var i in points)
+               {
+                    Rigidbody2D trb = i.gameObject.GetComponent<Rigidbody2D>();
+                    trb.drag = Mathf.Lerp(trb.drag,0,1);
+               }
+            }
+            isSwing = true;
+        }
+        else 
+        {
+            if (isSwing)
+            {
+                foreach (var i in points)
+                {
+                    i.gameObject.GetComponent<Rigidbody2D>().drag = 1;
+                }
+                isSwing = false;
+            }
+        }
     }
-    public void climb(float value)
+    public void Climb(float value)
     {
         percentage -= Time.deltaTime * value * speedClimb;
-        Debug.Log(percentage);
-        percentage = Mathf.Clamp(percentage, 0.98f/total, 1);
-        //Debug.Log(points.IndexOf(currentPoint));
+        percentage = Mathf.Clamp(percentage, 0.98f/total,(float) (total-1)/total );
     }
     public void swing(float value)
     {
@@ -64,11 +90,11 @@ public class MoveonRope : MonoBehaviour
         float distance = Vector3.Distance(points[0].position, character);
         if(distance < 2)
         {
-            currentPoint.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * value * (7-Mathf.Pow(distance,3)));
+            currentPoint.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * value * (7-Mathf.Pow(distance,4)));
         }
-        
+        timeSwing = 1;
     }
-    public void changeIndexRope(Transform target, GameObject pointJoinRope)
+    public void ChangeIndexAnchor(Transform target, GameObject pointJoinRope)
     {
         int index = points.IndexOf(target);
         float temp = index / (float)total;
@@ -79,25 +105,26 @@ public class MoveonRope : MonoBehaviour
             a.transform.parent = null;
         }
     }
-    public void joinCharacter(GameObject characterJoint, HingeJoint2D joinRope)
+    public void DetachAnchor()
+    {
+        if (a != null)
+        {
+            a = null;
+        }
+    }
+    public void joinCharacter(GameObject characterJoint)
     {
         if(b == null)
         {
             b = characterJoint;
-            joinRope.enabled = true;
         }
     }
-    public void disJoint(GameObject character)
+    public void disJoinCharacter(HingeJoint2D joinRope)
     {
-        if (a != null)
-        {
-            a.transform.SetParent(character.transform, false);
-            a.transform.localPosition = Vector3.zero;       
-            a = null;
-        }
         if (b != null)
         {
-            b = null;
+            joinRope.enabled = false;
+            b=null;
         }
     }
 }

@@ -1,51 +1,58 @@
 ﻿using UnityEngine;
 
-enum CharacterAreOn
+enum CharacterState
 {
     Ground,
     Air,
     Snout,
     Water,
-    Rope
+    Rope,
+    None
 };
 public class CharacterController : MonoBehaviour
 {
-    [SerializeField] float offsetX;
-    [SerializeField] float speed;
-    [SerializeField] float forceJump;
-    [SerializeField] Transform pointCenterHead;
-    [SerializeField] Transform pointLastLeg;
-    [SerializeField] LayerMask layerMaskEnvi;
-    [SerializeField] Vector3 offsetSnoutToCharacter;
-    [SerializeField] GameObject pointJointRope;
+    [Header("Movement Settings")]
+    [SerializeField] float speed = 10;
+    [SerializeField] float forceJump = 1500f;
 
-    Rigidbody2D rb;
-    Animator animator;
-    HingeJoint2D joinRope;
-    GameObject rope;
-    CharacterAreOn character;
-    bool canJump;
-    bool canMove;
-    bool isWallLeft;
-    bool isWallRight;
-    bool canCheckForwad;
-    bool isGrap;
-    bool canGrap;
-    Vector3 pointGrap;
-    float offsetCG = 0.83f;//offset between character and snout point 
-    
-    #region animationVariable
-    public Vector2 GrapOffset = new Vector2(0.9f, 4.4f);
-    #endregion
-
-    #region inputVariable
-    float gravity = 3f;
-    float sensitivity = 3f;
-    float maxValue = 1f;
-    float deadZone = 0.001f;
+    [Header("Input Settings")]
+    [SerializeField] float gravity = 3f;
+    [SerializeField] float sensitivity = 3f;
+    [SerializeField] float maxValue = 1f;
+    [SerializeField] float deadZone = 0.001f;
     float moveInput;
     float climbInput;
-    #endregion
+
+    [Header("Transform and Layers")]
+    [SerializeField] Transform headPoint;
+    [SerializeField] Transform legPoint;
+    [SerializeField] LayerMask layerMaskEnvi;
+
+    [Header("Offset")]
+    [SerializeField] Vector3 offsetSnoutToCharacter = new Vector3(0.857712f, 1.927351f, 0);
+    [SerializeField] float offsetX = 0.6f; //offset when flipping
+    [SerializeField] float startGrapOffset = 0.83f;//offset when starting graping down snout
+    [SerializeField] Vector2 GrapOffset = new Vector2(0.9f, 4.4f); //offset when graping up and down snout point 
+
+    [Header("Object")]
+    [SerializeField] GameObject jointRopePoint;
+    GameObject rope;
+
+    private Rigidbody2D rb;
+    private Animator animator;
+    private HingeJoint2D joinRope;
+    private CharacterState currentState;
+    private CharacterState setState;
+
+    private bool canJump;
+    private bool canMove;
+    private bool isWallLeft;
+    private bool isWallRight;
+    private bool canCheckForwad;
+    private bool isGrap;
+    private bool canGrap;
+    private Vector3 pointGrap;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Ground")
@@ -54,14 +61,11 @@ public class CharacterController : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
     }
-    private void Start()
+
+    private void resetGame()
     {
-		rb = GetComponent<Rigidbody2D>();
-		animator = GetComponent<Animator>();
-        joinRope = GetComponent<HingeJoint2D>();
-		moveInput = 0;
+        moveInput = 0;
         climbInput = 0;
-        character = CharacterAreOn.Ground;
         canJump = true;
         canMove = true;
         isWallLeft = false;
@@ -69,75 +73,168 @@ public class CharacterController : MonoBehaviour
         canCheckForwad = true;
         isGrap = false;
         canGrap = false;
+        currentState = CharacterState.Ground;
+        setState = CharacterState.None;
     }
+
+    private void Start()
+    {
+		rb = GetComponent<Rigidbody2D>();
+		animator = GetComponent<Animator>();
+        joinRope = GetComponent<HingeJoint2D>();       
+        resetGame();
+    }
+
     private void Update()
     {
-        changeStatus();
-        applyStatus();
+        updateStatus();
+        applyStatusLogic();
         applyAnimation();
         inputKey();
+        applyMovemen();
+        appllyClimb();
     }
-    void applyStatus()
+
+    void updateStatus()
     {
-        switch (character)
+        if (!isGrap)
         {
-            case CharacterAreOn.Snout:
+            if (currentState != CharacterState.Rope)
+            {
+                rayCheckDown();
+            }
+            if (canCheckForwad && currentState != CharacterState.Snout && currentState != CharacterState.Rope)
+            {
+                rayCheckForWard();
+            }
+        }
+    }
+
+    void applyStatusLogic()
+    {
+        if (currentState == setState)
+        {
+            return;
+        }
+        switch (currentState)
+        {
+            case CharacterState.Snout:
                 rb.velocity = Vector3.zero;
                 rb.gravityScale = 0;
                 break;
-            case CharacterAreOn.Air:
+            case CharacterState.Air:
                 rb.gravityScale = 2.5f;
                 canCheckForwad = true;
                 break;
-            case CharacterAreOn.Ground:
+            case CharacterState.Ground:
                 rb.gravityScale = 2.5f;
-                applyMovemen();
                 break;
-            case CharacterAreOn.Rope:
-                appllyClimb();
+            case CharacterState.Rope:
+                
                 break;
         }
+        setState = currentState;
     }
+
     void inputKey()
     {
         if (Input.GetKey(KeyCode.W))
         {
-            if (character == CharacterAreOn.Ground && canJump && !isGrap)
+            if (currentState == CharacterState.Ground && canJump && !isGrap)
             {
                 canJump = false;
                 canMove = false;
                 Invoke("applyForceJump", 0.2f);
-                Invoke("ChangeCanJump", 0.5f);
             }
-            if (character == CharacterAreOn.Snout && !isGrap)
+            if (currentState == CharacterState.Snout && !isGrap)
             {
                 isGrap = true;
             }
         }
         if (Input.GetKey(KeyCode.S))
         {
-            if (character == CharacterAreOn.Snout && !isGrap)
+            if (currentState == CharacterState.Snout && !isGrap)
             {
                 canCheckForwad = false;
             }
-            if (character == CharacterAreOn.Ground && canGrap)
+            if (currentState == CharacterState.Ground && canGrap)
             {
                 canGrap = false;
                 isGrap = true;
                 bool isRight = transform.position.x > pointGrap.x;
                 applyDirection(isRight ? 1 : -1);
                 Vector3 newPos = transform.position;
-                newPos.x = isRight ? pointGrap.x + offsetCG : pointGrap.x + offsetCG * -1;
+                newPos.x = isRight ? pointGrap.x + startGrapOffset : pointGrap.x + startGrapOffset * -1;
                 transform.position = newPos;
             }
         }
-        if(character == CharacterAreOn.Ground || character == CharacterAreOn.Rope)
+        if (currentState == CharacterState.Ground || currentState == CharacterState.Rope)
         {
             inputHorizontalDirectly();
             inputVerticalDirectly();
         }
     }
-    #region Animation
+
+    void inputHorizontalDirectly()
+    {
+        if (Input.GetKey(KeyCode.A) && !isWallLeft)
+        {
+            moveInput = moveInput > 0 ? 0 : moveInput -= sensitivity * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.D) && !isWallRight)
+        {
+            moveInput = moveInput < 0 ? 0 : moveInput += sensitivity * Time.deltaTime;
+        }
+        else
+        {
+            if (moveInput > 0)
+            {
+                moveInput -= gravity * Time.deltaTime;
+                moveInput = Mathf.Max(0, moveInput);
+            }
+            else if (moveInput < 0)
+            {
+                moveInput += gravity * Time.deltaTime;
+                moveInput = Mathf.Min(0, moveInput);
+            }
+        }
+        moveInput = Mathf.Clamp(moveInput, -maxValue, maxValue);
+        if (Mathf.Abs(moveInput) < deadZone)
+        {
+            moveInput = 0;
+        }
+    }
+
+    void inputVerticalDirectly()
+    {
+        if (Input.GetKey(KeyCode.W) && currentState == CharacterState.Rope)
+        {
+            climbInput += sensitivity * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.S) && currentState == CharacterState.Rope)
+        {
+            climbInput -= sensitivity * Time.deltaTime;
+        }
+        else
+        {
+            if (climbInput > 0)
+            {
+                climbInput -= gravity * Time.deltaTime;
+                climbInput = Mathf.Max(0, climbInput);
+            }
+            else if (climbInput < 0)
+            {
+                climbInput += gravity * Time.deltaTime;
+                climbInput = Mathf.Min(0, climbInput);
+            }
+        }
+        climbInput = Mathf.Clamp(climbInput, -maxValue, maxValue);
+        if (Mathf.Abs(climbInput) < deadZone)
+        {
+            climbInput = 0;
+        }
+    }
+   
     void applyAnimation()
     {
 		animator.SetFloat("Moving", Mathf.Abs(moveInput));
@@ -154,44 +251,53 @@ public class CharacterController : MonoBehaviour
         {
             animator.SetBool("IsJump", false);
         }
-        switch (character)
+        switch (currentState)
         {
-            case CharacterAreOn.Ground:
+            case CharacterState.Ground:
                 animator.SetBool("GetLand", true);
                 animator.SetBool("IsMove", true);
                 animator.SetBool("IsSwing", false);
                 animator.SetBool("IsFall", false);
                 break;
-            case CharacterAreOn.Air:
+            case CharacterState.Air:
                 animator.SetBool("IsFall", true);
                 animator.SetBool("GetLand", false);
                 animator.SetBool("IsMove", false);
                 animator.SetBool("IsSwing", false);
                 break;
-            case CharacterAreOn.Snout:
+            case CharacterState.Snout:
                 animator.SetBool("IsSwing", true);
                 animator.SetBool("IsMove", false);
                 animator.SetBool("IsFall", false);
                 break;
-            case CharacterAreOn.Rope:
+            case CharacterState.Rope:
                 animator.SetBool("IsSwing", true);
                 animator.SetBool("IsFall", false);
                 break;
             
         }
     }
-    #endregion
+
     #region Movement
     void appllyClimb()
     {
-        if (climbInput != 0)
+        if (rope != null)
         {
-            rope.GetComponent<MoveonRope>().climb(climbInput);
-        }
-        
-        if (moveInput != 0)
-        {
-            rope.GetComponent<MoveonRope>().swing(moveInput);
+            if (climbInput != 0)
+            {
+                rope.GetComponent<MoveonRope>().Climb(climbInput);
+            }
+
+            if (moveInput != 0)
+            {
+                rope.GetComponent<MoveonRope>().swing(moveInput);
+            }
+            if (Input.GetKey(KeyCode.Space))
+            {
+                rope.GetComponent<MoveonRope>().disJoinCharacter(joinRope);
+                currentState = CharacterState.Air;
+                transform.rotation = Quaternion.identity;
+            }
         }
     }
     void applyMovemen()
@@ -229,47 +335,33 @@ public class CharacterController : MonoBehaviour
         }
         rb.velocity = Vector2.zero;
         rb.AddForce(vectorJump * forceJump);
+        Invoke(nameof(ResetJump), 0.3f);
+    }
 
-    }
-    void ChangeCanJump()
-    {
-        canJump = true;
-    }
+    private void ResetJump() => canJump = true;
+
     #endregion
+
     #region ChageStatus
-    void changeStatus()
-    {
-        if (!isGrap)
-        {
-            if (character != CharacterAreOn.Rope)
-            {
-                rayCheckDown();
-            }
-            if (canCheckForwad && character != CharacterAreOn.Snout && character != CharacterAreOn.Rope)
-            {
-                rayCheckForWard();
-            }
-        }
-    }
     void rayCheckDown()
     {
         float rayLength = 4.35f;
-        Vector3 startPoint = pointCenterHead.position;
+        Vector3 startPoint = headPoint.position;
         RaycastHit2D hit = Physics2D.Raycast(startPoint, Vector2.down, rayLength, layerMaskEnvi);
         if (hit.collider != null)
         {
             if (hit.collider.CompareTag("Ground"))
             {
-                character = CharacterAreOn.Ground;
+                currentState = CharacterState.Ground;
             }
             else if (hit.collider.CompareTag("Water"))
             {
-                character = CharacterAreOn.Water;
+                currentState = CharacterState.Water;
             }
         }
         else
         {
-            character = CharacterAreOn.Air; 
+            currentState = CharacterState.Air; 
         }
         hit = Physics2D.Raycast(startPoint, Vector2.down, rayLength, LayerMask.GetMask("Snout"));
         if (hit.collider != null)
@@ -283,17 +375,18 @@ public class CharacterController : MonoBehaviour
         }
         Debug.DrawRay(startPoint, Vector3.down * rayLength, Color.red);
     }
+
     void rayCheckForWard()
     {
         float rayLengthNear = 0.3f;
         float rayLengthFar = 5;
-        Vector3 startPoint = pointCenterHead.position,
+        Vector3 startPoint = headPoint.position,
                 VectorFace = (transform.localScale.x>0)?Vector3.right:Vector3.left;
         RaycastHit2D hit;
         hit = Physics2D.Raycast(startPoint, VectorFace, rayLengthNear, LayerMask.GetMask("Snout"));
         if (hit.collider != null)
         {
-            character = CharacterAreOn.Snout;
+            currentState = CharacterState.Snout;
         }
         hit = Physics2D.Raycast(startPoint, VectorFace, rayLengthNear, layerMaskEnvi);
         isWallLeft = false;
@@ -309,25 +402,29 @@ public class CharacterController : MonoBehaviour
         hit = Physics2D.Raycast(startPoint, VectorFace, rayLengthNear, LayerMask.GetMask("Rope"));
         if (hit.collider != null)
         {
-            character = CharacterAreOn.Rope;
-            rope.GetComponent<MoveonRope>().joinCharacter(gameObject,joinRope);
+            currentState = CharacterState.Rope;
+            if (rope != null)
+            {
+                rope.GetComponent<MoveonRope>().joinCharacter(gameObject);
+                joinRope.enabled = true;
+            }
         }
-        if (character != CharacterAreOn.Rope)
+        if (currentState != CharacterState.Rope)
         {
             hit = Physics2D.Raycast(startPoint, VectorFace, rayLengthFar, LayerMask.GetMask("Rope"));
-
             if (hit.collider != null)
             {
                 if (rope != null)
                 {
                     if (rope != hit.collider.transform.parent?.gameObject)
                     {
-                        rope.GetComponent<MoveonRope>().disJoint(gameObject);
+                        rope.GetComponent<MoveonRope>().DetachAnchor();
+                        jointRopePoint.transform.SetParent(transform, false);
                         rope = hit.collider.transform.parent?.gameObject;
                     }
                     else
                     {
-                        rope.GetComponent<MoveonRope>().changeIndexRope(hit.collider.transform, pointJointRope);
+                        rope.GetComponent<MoveonRope>().ChangeIndexAnchor(hit.collider.transform, jointRopePoint);
                     }
                 }
                 else
@@ -335,7 +432,7 @@ public class CharacterController : MonoBehaviour
                     rope = hit.collider.transform.parent?.gameObject;
                     if (rope != null)
                     {
-                        rope.GetComponent<MoveonRope>().changeIndexRope(hit.collider.transform, pointJointRope);
+                        rope.GetComponent<MoveonRope>().ChangeIndexAnchor(hit.collider.transform, jointRopePoint);
                     }
                 }
             }
@@ -343,74 +440,17 @@ public class CharacterController : MonoBehaviour
             {
                 if (rope != null)
                 {
-                    rope.GetComponent<MoveonRope>().disJoint(gameObject);
+                    rope.GetComponent<MoveonRope>().DetachAnchor();
+                    jointRopePoint.transform.SetParent(transform, false);
                     rope = null;
                 }
             }
         }
         Debug.DrawRay(startPoint, VectorFace * rayLengthNear, Color.green);
     }
+
     #endregion
-    #region inputFunction
-    void inputHorizontalDirectly()
-    {
-        if (Input.GetKey(KeyCode.A)  && !isWallLeft)
-        {
-            moveInput = moveInput > 0 ? 0 : moveInput -= sensitivity * Time.deltaTime;
-        }
-        else if (Input.GetKey(KeyCode.D) && !isWallRight)
-        {
-            moveInput = moveInput < 0 ? 0 : moveInput += sensitivity * Time.deltaTime;
-        }
-        else
-        {
-            if(moveInput > 0)
-            {
-                moveInput -= gravity * Time.deltaTime;
-                moveInput = Mathf.Max(0, moveInput);
-            }
-            else if(moveInput < 0)
-            {
-                moveInput += gravity * Time.deltaTime;
-                moveInput = Mathf.Min(0, moveInput);
-            }
-        }
-        moveInput = Mathf.Clamp(moveInput, -maxValue, maxValue);
-        if(Mathf.Abs(moveInput) < deadZone)
-        {
-            moveInput = 0;
-        }
-    }
-    void inputVerticalDirectly()
-    {
-        if (Input.GetKey(KeyCode.W) && character == CharacterAreOn.Rope)
-        {
-            climbInput += sensitivity * Time.deltaTime;
-        }
-        else if (Input.GetKey(KeyCode.S) && character == CharacterAreOn.Rope)
-        {
-            climbInput -= sensitivity * Time.deltaTime;
-        }
-        else
-        {
-            if (climbInput > 0)
-            {
-                climbInput -= gravity * Time.deltaTime;
-                climbInput = Mathf.Max(0, climbInput);
-            }
-            else if (climbInput < 0)
-            {
-                climbInput += gravity * Time.deltaTime;
-                climbInput = Mathf.Min(0, climbInput);
-            }
-        }
-        climbInput = Mathf.Clamp(climbInput, -maxValue, maxValue);
-        if (Mathf.Abs(climbInput) < deadZone)
-        {
-            climbInput = 0;
-        }
-    }
-    #endregion
+
     #region functionAnimation
     public void UpdatePositionAfterGrapingDown()
     {
@@ -422,6 +462,7 @@ public class CharacterController : MonoBehaviour
         isGrap = false;
         animator.SetBool("Grap", isGrap);
     }
+
     public void UpdatePositionAfterGrapingUp()
     {
         Vector2 faceGrap = GrapOffset;
