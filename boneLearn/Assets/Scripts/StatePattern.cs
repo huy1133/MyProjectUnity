@@ -68,7 +68,7 @@ public class GroundState : ICharacterState
             if (character.canMove)
             {
                 character.animator.SetFloat("Moving", Mathf.Abs(character.moveInput));
-                character.Move();
+                character.MoveOnGround();
             }
             if (Input.GetKey(KeyCode.E) && character.canJump)
             {
@@ -82,7 +82,7 @@ public class GroundState : ICharacterState
     }
 }
 
-public class SnoutSatate : ICharacterState
+public class SnoutState : ICharacterState
 {
     public void EnterState(MoveV3 character)
     {
@@ -101,6 +101,47 @@ public class SnoutSatate : ICharacterState
         if (Input.GetKey(KeyCode.E))
         {
             character.animator.SetBool("Grap",true);
+        }
+    }
+}
+
+public class RopeState : ICharacterState
+{
+    public void EnterState(MoveV3 character)
+    {
+        character.CatchRope();
+        character.animator.SetBool("IsSwing", true);
+        character.canMove = true;
+        character.canJumpOnRope = true;
+        character.canSwing = false;
+    }
+
+    public void ExitState(MoveV3 character)
+    {
+        character.animator.SetBool("IsSwing", false);
+        character.animator.SetBool("IsJumpOnRope", false);
+        character.canMove = false;
+    }
+    public void UpdateState(MoveV3 character)
+    {
+        character.inputVerticalDirectly();
+        character.inputHorizontalDirectly();
+        character.animator.SetFloat("Climbing", character.climbInput);
+        if (character.climbInput != 0)
+        {
+            character.MoveOnRope();
+            Debug.Log(character.climbInput);
+        }
+        if (character.moveInput != 0)
+        {
+            character.SwingOnRope();
+        }
+        if (Input.GetKey(KeyCode.E) && character.canJumpOnRope)
+        {
+            character.animator.SetBool("IsJumpOnRope", true);
+            character.jumpDirection = character.moveInput;
+            character.Invoke(nameof(character.JumpOnRope), 0.3f);
+            character.canJumpOnRope = false;
         }
     }
 }

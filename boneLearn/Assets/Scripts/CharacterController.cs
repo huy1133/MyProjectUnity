@@ -294,9 +294,10 @@ public class CharacterController : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.Space))
             {
-                rope.GetComponent<MoveonRope>().disJoinCharacter(joinRope);
+                rope.GetComponent<MoveonRope>().DetachCharacter();
                 currentState = CharacterState.Air;
                 transform.rotation = Quaternion.identity;
+                joinRope.enabled = false;
             }
         }
     }

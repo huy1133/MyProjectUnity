@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class MoveV3 : MonoBehaviour
 { 
@@ -32,10 +33,12 @@ public class MoveV3 : MonoBehaviour
     [HideInInspector] public float moveInput;
     [HideInInspector] public float climbInput;
     [HideInInspector] public bool canJump;
+    [HideInInspector] public bool canSwing;
+    [HideInInspector] public bool canJumpOnRope;
     [HideInInspector] public bool canMove;
     [HideInInspector] public float jumpDirection;
     [HideInInspector] public bool isGrap;
-    //[HideInInspector] public bool isGrap;
+
     private HingeJoint2D joinRope;
     private CharacterState currentStateEnum;
     private CharacterState setStateEnum;
@@ -74,9 +77,9 @@ public class MoveV3 : MonoBehaviour
 
     private void Update()
     {
-        UpdateStatus();
         if (currentStateEnum != CharacterState.Rope)
         {
+            UpdateStatus();
             FindRope();
         }
         CurrentCharacterState.UpdateState(this);
@@ -100,6 +103,7 @@ public class MoveV3 : MonoBehaviour
         isGrap = false;
         canJump = true;
         canMove = true;
+        canSwing = true;
         moveInput = 0;
         climbInput = 0;
         currentStateEnum = CharacterState.Air;
@@ -111,10 +115,10 @@ public class MoveV3 : MonoBehaviour
     void UpdateStatus()
     {
         currentStateEnum = CheckUnderFoot();
-        CharacterState tempStatus = CheckFrontFace();
-        if (tempStatus != CharacterState.None)
+        if (canSwing)
         {
-            currentStateEnum = tempStatus;
+            CharacterState tempStatus = CheckFrontFace();
+            currentStateEnum = tempStatus != CharacterState.None ? tempStatus : currentStateEnum;
         }
 
         if (currentStateEnum == setStateEnum) 
@@ -131,11 +135,10 @@ public class MoveV3 : MonoBehaviour
                 SetState(new GroundState());
                 break;
             case CharacterState.Snout:
-                SetState(new SnoutSatate());
-
+                SetState(new SnoutState());
                 break;
             case CharacterState.Rope:
-               
+                SetState(new RopeState());
                 break;
         }
         setStateEnum = currentStateEnum;
@@ -144,6 +147,7 @@ public class MoveV3 : MonoBehaviour
     public void SetTransfromBeforeGrap()
     {
         bool isRight = transform.position.x > pointGrap.x;
+        Debug.Log(transform.position.x + " " + pointGrap.x);
         applyDirection(isRight ? 1 : -1);
         Vector3 newPos = transform.position;
         newPos.x = isRight ? pointGrap.x + startGrapOffset : pointGrap.x + startGrapOffset * -1;
@@ -151,7 +155,7 @@ public class MoveV3 : MonoBehaviour
         rb.velocity = Vector3.zero;
     }
     
-    public void Move()
+    public void MoveOnGround()
     {
         applyDirection(moveInput);
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
@@ -171,6 +175,16 @@ public class MoveV3 : MonoBehaviour
         }
     }
 
+    public void MoveOnRope()
+    {
+        rope.GetComponent<MoveonRope>().Climb(climbInput);
+    }
+
+    public void SwingOnRope()
+    {
+        rope.GetComponent<MoveonRope>().swing(moveInput);
+    }
+
     public void Jump()
     {
         Vector3 vectorJump;
@@ -188,8 +202,51 @@ public class MoveV3 : MonoBehaviour
         Invoke(nameof(ResetJump), 0.3f);
     }
 
+    public void JumpOnRope()
+    {
+        DetachFromRope();
+
+        Vector3 vectorJump;
+        if (Mathf.Abs(jumpDirection) > 0.4f)
+        {
+            vectorJump = jumpDirection > 0 ? new Vector2(1, 1.5f) : new Vector2(-1, 1.5f);
+            vectorJump.Normalize();
+        }
+        else
+        {
+            float faceX = transform.localScale.x;
+            vectorJump = faceX > 0 ? new Vector2(1, 1.5f) : new Vector2(-1, 1.5f);
+            vectorJump.Normalize();
+        }
+
+        rb.velocity = Vector2.zero;
+        rb.AddForce(vectorJump * forceJump);
+    }
+
+    void DetachFromRope()
+    {
+        rope.GetComponent<MoveonRope>().DetachAnchor();
+        joinRope.enabled = false;
+
+        currentStateEnum = CharacterState.Air;
+
+        StartCoroutine(ResetRotation());
+        Invoke(nameof(ResetSwing), 0.5f);
+    }
+
+    IEnumerator ResetRotation()
+    {
+        while (transform.eulerAngles.z > 0)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, 10 * Time.deltaTime);
+            yield return null;
+        }
+        transform.rotation = Quaternion.identity;
+    }
+
     public void ResetJump() => canJump = true;
     public void ResetMove() => canMove = true;
+    public void ResetSwing() => canSwing = true;
 
     CharacterState CheckUnderFoot()
     {
@@ -247,9 +304,21 @@ public class MoveV3 : MonoBehaviour
         if (hit.collider != null)
         {
             result = true;
-            pointGrap = hit.collider.transform.position;
+            pointGrap = hit.collider.transform.GetChild(0).transform.position;
         }
         return result;
+    }
+
+    public void CatchRope()
+    {
+        if (rope != null)
+        {
+            if (rope != null)
+            {
+                rope.GetComponent<MoveonRope>().joinCharacter(gameObject);
+                joinRope.enabled = true;
+            }
+        }
     }
 
     void FindRope()
@@ -326,11 +395,11 @@ public class MoveV3 : MonoBehaviour
 
     public void inputVerticalDirectly()
     {
-        if (Input.GetKey(KeyCode.W) && currentStateEnum == CharacterState.Rope)
+        if (Input.GetKey(KeyCode.W))
         {
             climbInput += sensitivity * Time.deltaTime;
         }
-        else if (Input.GetKey(KeyCode.S) && currentStateEnum == CharacterState.Rope)
+        else if (Input.GetKey(KeyCode.S))
         {
             climbInput -= sensitivity * Time.deltaTime;
         }

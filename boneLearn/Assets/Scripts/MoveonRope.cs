@@ -81,7 +81,7 @@ public class MoveonRope : MonoBehaviour
     public void Climb(float value)
     {
         percentage -= Time.deltaTime * value * speedClimb;
-        percentage = Mathf.Clamp(percentage, 0.98f/total,(float) (total-1)/total );
+        percentage = Mathf.Clamp(percentage, 0.98f/total,(float) (total-2)/total );
     }
     public void swing(float value)
     {
@@ -119,11 +119,10 @@ public class MoveonRope : MonoBehaviour
             b = characterJoint;
         }
     }
-    public void disJoinCharacter(HingeJoint2D joinRope)
+    public void DetachCharacter()
     {
         if (b != null)
         {
-            joinRope.enabled = false;
             b=null;
         }
     }
