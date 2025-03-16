@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -60,11 +59,11 @@ public class GameController : MonoBehaviour
         {
             TagName.fontSize += k * type;
             textPlay.fontSize += k * type;
-            if (TagName.fontSize ==100)
+            if (TagName.fontSize == 70)
             {
                 type = 1;
             }
-            if (TagName.fontSize == 130)
+            if (TagName.fontSize == 90)
             {
                 type = -1;
             }
